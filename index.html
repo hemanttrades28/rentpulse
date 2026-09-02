@@ -1,300 +1,943 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark" id="htmlRoot">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RentPulse - Cloud Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase Compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RentPulse - Rental & Electricity Management</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- DARK THEME STYLES --- */
+        html.dark body {
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+
+        html.dark .theme-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-color: rgba(51, 65, 85, 0.8);
+        }
+
+        html.dark .theme-header {
+            background-color: rgba(2, 6, 23, 0.85);
+            border-color: rgba(51, 65, 85, 0.8);
+        }
+
+        html.dark .theme-glow {
+            background-color: rgba(99, 102, 241, 0.12);
+        }
+
+        html.dark .theme-input {
+            background-color: rgba(2, 6, 23, 0.8);
+            border-color: rgba(51, 65, 85, 0.8);
+            color: #f8fafc;
+        }
+
+        html.dark .theme-input::placeholder {
+            color: #64748b;
+        }
+
+        html.dark .theme-text-primary { color: #f8fafc; }
+        html.dark .theme-text-muted { color: #94a3b8; }
+        html.dark .theme-text-subtle { color: #64748b; }
+        html.dark .theme-table-head { background-color: rgba(0, 0, 0, 0.25); border-color: rgba(51, 65, 85, 0.8); }
+        html.dark .theme-table-row { border-color: rgba(30, 41, 59, 0.5); }
+        html.dark .theme-table-row:hover { background-color: rgba(0, 0, 0, 0.2); }
+        html.dark .theme-action-btn { background-color: rgba(0, 0, 0, 0.3); border-color: rgba(51, 65, 85, 0.6); }
+
+        /* --- LIGHT THEME STYLES (ENHANCED VISIBILITY & CONTRAST) --- */
+        html:not(.dark) body {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        html:not(.dark) .theme-card {
+            background-color: #ffffff;
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        html:not(.dark) .theme-header {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: #cbd5e1;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        html:not(.dark) .theme-glow {
+            background-color: rgba(99, 102, 241, 0.08);
+        }
+
+        html:not(.dark) .theme-input {
+            background-color: #ffffff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        html:not(.dark) .theme-input::placeholder {
+            color: #94a3b8;
+        }
+
+        html:not(.dark) .theme-text-primary { color: #0f172a; }
+        html:not(.dark) .theme-text-muted { color: #475569; }
+        html:not(.dark) .theme-text-subtle { color: #64748b; }
+        html:not(.dark) .theme-table-head { background-color: #f8fafc; border-color: #e2e8f0; }
+        html:not(.dark) .theme-table-row { border-color: #e2e8f0; }
+        html:not(.dark) .theme-table-row:hover { background-color: #f8fafc; }
+        html:not(.dark) .theme-action-btn { background-color: #f8fafc; border-color: #cbd5e1; }
+
+        /* Light Theme Status Badges High Contrast Overrides */
+        html:not(.dark) .badge-paid { background-color: #dcfce7 !important; color: #15803d !important; border-color: #86efac !important; }
+        html:not(.dark) .badge-pending { background-color: #ffe4e6 !important; color: #be123c !important; border-color: #fca5a5 !important; }
+        html:not(.dark) .badge-partial { background-color: #fef3c7 !important; color: #b45309 !important; border-color: #fde68a !important; }
+        html:not(.dark) .badge-unit { background-color: #e0e7ff !important; color: #4338ca !important; border-color: #c7d2fe !important; }
+        html:not(.dark) .unit-consumed { color: #d97706 !important; }
+
+        /* Subtle Grid Background */
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
+
+        /* Modal Smooth Animations */
+        .modal-overlay { opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { transform: translateY(15px) scale(0.97); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+
+        /* Hide Number Input Arrows */
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen text-gray-800">
+<body class="relative min-h-screen flex flex-col pb-12 sm:pb-8">
 
-  <!-- AUTH SECTION (Login / Sign Up) -->
-  <div id="authSection" class="flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-extrabold text-blue-600">RentPulse</h1>
-        <p class="text-gray-500 text-sm mt-1" id="authSubtitle">Cloud-synced Property Management</p>
-      </div>
-
-      <form id="authForm" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Email</label>
-          <input type="email" id="authEmail" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="owner@rentpulse.com">
+    <!-- Firebase Auth Overlay -->
+    <div id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md transition-opacity">
+        <div class="theme-card border rounded-2xl p-6 sm:p-8 w-full max-w-sm shadow-2xl mx-4 relative overflow-hidden">
+            <div class="flex items-center justify-center gap-2 mb-6">
+                <div class="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 shadow-sm">
+                    <i data-lucide="zap" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+                </div>
+                <h2 class="text-xl font-bold theme-text-primary tracking-tight">Rent<span class="text-indigo-600 dark:text-indigo-400">Pulse</span> Sync</h2>
+            </div>
+            <form id="authForm" class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Email Address</label>
+                    <input type="email" id="authEmail" required placeholder="you@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Password</label>
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                </div>
+                <p id="authError" class="text-xs font-medium text-rose-500 hidden text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"></p>
+                <button type="submit" id="authSubmitBtn" class="w-full py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <span>Continue to Dashboard</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+            <p class="text-[11px] theme-text-subtle text-center mt-4">New here? We will automatically create an account for you.</p>
         </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Password</label>
-          <input type="password" id="authPassword" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="••••••••">
-        </div>
-
-        <p id="authError" class="text-red-500 text-xs hidden"></p>
-
-        <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition duration-200">
-          Sign In
-        </button>
-      </form>
-
-      <div class="text-center mt-6">
-        <button id="toggleAuthMode" class="text-xs text-blue-600 hover:underline focus:outline-none">
-          Don't have an account? Sign Up
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- MAIN DASHBOARD (Only visible after login) -->
-  <div id="dashboardSection" class="hidden min-h-screen flex flex-col">
+    <!-- Ambient Glow & Background Grid -->
+    <div class="fixed inset-0 z-0 bg-grid-pattern pointer-events-none"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] sm:w-[800px] h-[250px] sm:h-[400px] theme-glow rounded-full blur-[90px] sm:blur-[120px] pointer-events-none z-0"></div>
+
     <!-- Header -->
-    <header class="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-10">
-      <div class="flex items-center gap-3">
-        <h1 class="text-xl font-bold text-blue-600">RentPulse</h1>
-        <span class="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1">
-          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Cloud Live
-        </span>
-      </div>
-      <div class="flex items-center gap-4">
-        <span id="userEmailDisplay" class="text-xs text-gray-500 font-medium hidden sm:inline"></span>
-        <button id="logoutBtn" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-1.5 px-3 rounded-md transition">
-          Logout
-        </button>
-      </div>
+    <header class="relative z-10 sticky top-0 w-full border-b theme-header backdrop-blur-xl px-4 sm:px-6 py-3.5 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2.5">
+            <div class="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 shadow-sm">
+                <i data-lucide="zap" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+            </div>
+            <div>
+                <h1 class="text-lg sm:text-xl font-bold tracking-tight theme-text-primary flex items-center gap-1">
+                    Rent<span class="text-indigo-600 dark:text-indigo-400">Pulse</span>
+                </h1>
+                <p class="text-[10px] theme-text-subtle font-medium hidden sm:block">Rental & Electricity Manager</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Theme Toggle Button -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-2 theme-action-btn border rounded-lg text-xs font-medium theme-text-primary transition-all active:scale-95 shadow-sm" title="Switch Theme">
+                <i id="themeIcon" data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+                <span id="themeLabel" class="hidden sm:inline">Light Mode</span>
+            </button>
+
+            <!-- Logout Button -->
+            <button onclick="logoutApp()" class="flex items-center gap-1.5 px-3 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm" title="Sign Out">
+                <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
+                <span class="hidden sm:inline">Logout</span>
+            </button>
+
+            <button onclick="exportCSV()" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm">
+                <i data-lucide="download" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                <span class="hidden sm:inline">Export CSV</span>
+                <span class="sm:hidden">Export</span>
+            </button>
+
+            <button onclick="openModal()" class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg border border-indigo-500 transition-all shadow-md text-xs sm:text-sm font-medium active:scale-95">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Add Tenant</span>
+            </button>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-4 md:p-8 max-w-5xl w-full mx-auto space-y-6">
-      
-      <!-- Stats / Action Bar -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        <div>
-          <h2 class="text-lg font-bold text-gray-800">Tenant Directory</h2>
-          <p class="text-xs text-gray-500">Changes here automatically sync to all your devices</p>
-        </div>
-        <button id="openModalBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2">
-          <span>+</span> Add Tenant
-        </button>
-      </div>
+    <!-- Main Content Container -->
+    <main class="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 flex flex-col gap-6 sm:gap-8">
+        
+        <!-- Responsive KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
+            <!-- Card 1: Active Tenants -->
+            <div class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs sm:text-sm theme-text-muted font-medium">Active Tenants</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold mt-1 font-mono tracking-tight theme-text-primary" id="kpi-tenants">0</h2>
+                    </div>
+                    <div class="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2: Rent Collected / Pending -->
+            <div class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs sm:text-sm theme-text-muted font-medium">Rent Col. / Pending (₹)</p>
+                        <div class="flex items-baseline gap-1.5 sm:gap-2 mt-1 flex-wrap">
+                            <h2 class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono tracking-tight" id="kpi-rent-col">0</h2>
+                            <span class="theme-text-subtle text-base font-semibold">/</span>
+                            <span class="text-base sm:text-lg font-medium text-rose-600 dark:text-rose-400 font-mono" id="kpi-rent-pen">0</span>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="indian-rupee" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Tenants Table -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-500 uppercase text-xs border-b">
-              <tr>
-                <th class="py-3 px-4">Name</th>
-                <th class="py-3 px-4">Property / Room</th>
-                <th class="py-3 px-4">Rent ($)</th>
-                <th class="py-3 px-4">Status</th>
-                <th class="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="tenantTableBody" class="divide-y divide-gray-100">
-              <tr>
-                <td colspan="5" class="text-center py-8 text-gray-400">Loading data from cloud...</td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- Card 3: Electricity Consumed -->
+            <div class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group sm:col-span-2 lg:col-span-1">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs sm:text-sm theme-text-muted font-medium">Total Consumed Units</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1 font-mono tracking-tight" id="kpi-units">0 <span class="text-xs font-sans font-normal theme-text-subtle">kWh</span></h2>
+                    </div>
+                    <div class="p-2.5 bg-amber-500/10 rounded-xl text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                        <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Controls: Search & Filters -->
+        <div class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center theme-card p-3 rounded-xl border backdrop-blur-md">
+            <!-- Search Bar -->
+            <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-subtle"></i>
+                <input type="text" id="searchInput" placeholder="Search tenant name or unit..." class="w-full theme-input border rounded-lg pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+            </div>
+
+            <!-- Dropdown Filters -->
+            <div class="grid grid-cols-2 gap-2.5 w-full md:w-auto">
+                <select id="filterRent" class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
+                    <option value="All">All Rent Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Partial">Partial</option>
+                </select>
+                <select id="filterElec" class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
+                    <option value="All">All Elec Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data Container -->
+        <div class="theme-card backdrop-blur-md border rounded-xl overflow-hidden shadow-sm">
+            
+            <!-- Desktop Table View -->
+            <div class="hidden md:block overflow-x-auto">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                        <tr class="theme-table-head border-b text-xs font-semibold theme-text-muted uppercase tracking-wider">
+                            <th class="px-5 py-3.5">Tenant Details</th>
+                            <th class="px-4 py-3.5">Unit</th>
+                            <th class="px-4 py-3.5 text-right">Rent (₹)</th>
+                            <th class="px-4 py-3.5 text-center">Rent Status</th>
+                            <th class="px-4 py-3.5 text-right">Meter: Prev → Curr</th>
+                            <th class="px-4 py-3.5 text-right">Consumed</th>
+                            <th class="px-4 py-3.5 text-center">Elec Status</th>
+                            <th class="px-5 py-3.5 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="desktopTableBody" class="divide-y theme-table-row text-sm">
+                        <!-- Desktop Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div id="mobileCardList" class="block md:hidden divide-y theme-table-row">
+                <!-- Mobile Cards injected via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex-col items-center justify-center py-16 theme-text-muted px-4 text-center">
+                <div class="p-4 theme-action-btn rounded-full mb-3 border">
+                    <i data-lucide="inbox" class="w-8 h-8"></i>
+                </div>
+                <p class="text-sm font-medium theme-text-primary">No tenant records found</p>
+                <p class="text-xs mt-1 theme-text-subtle">Try adjusting search filters or add a new tenant record.</p>
+            </div>
+        </div>
     </main>
-  </div>
 
-  <!-- ADD TENANT MODAL -->
-  <div id="tenantModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <h3 class="text-lg font-bold text-gray-800">Add New Tenant</h3>
-      <form id="tenantForm" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Tenant Name</label>
-          <input type="text" id="tenantName" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+    <!-- Modal Form (Add/Edit Tenant) -->
+    <div id="tenantModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
+        
+        <!-- Modal Card Container -->
+        <div class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
+                <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2" id="modalTitle">
+                    Add New Tenant
+                </h3>
+                <button onclick="closeModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form id="tenantForm" class="p-4 sm:p-6 overflow-y-auto flex-1">
+                <input type="hidden" id="formId">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <!-- Tenant Name -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Tenant Name *</label>
+                        <input type="text" id="formName" required placeholder="Full Name" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+                    
+                    <!-- Contact -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Contact Number *</label>
+                        <input type="tel" id="formContact" required placeholder="10-digit phone number" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+
+                    <!-- Date Joined -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Date Joined *</label>
+                        <input type="date" id="formDate" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+
+                    <!-- Unit Type -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Unit Type *</label>
+                        <input list="unitTypes" id="formUnit" required placeholder="e.g. 2BHK, 1RK, Shop 1" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <datalist id="unitTypes">
+                            <option value="2BHK"></option>
+                            <option value="3RK"></option>
+                            <option value="2RK"></option>
+                            <option value="1BHK"></option>
+                            <option value="Single Room"></option>
+                            <option value="Commercial Shop"></option>
+                        </datalist>
+                    </div>
+
+                    <!-- Base Rent -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Base Rent Amount (₹) *</label>
+                        <input type="number" id="formRent" min="0" required placeholder="12000" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+
+                    <!-- Rent Status -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Rent Payment Status *</label>
+                        <select id="formRentStatus" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Partial">Partial</option>
+                        </select>
+                    </div>
+
+                    <!-- Partial Amount Paid Field -->
+                    <div class="space-y-1.5 hidden sm:col-span-2" id="partialAmountContainer">
+                        <label class="text-xs font-medium text-amber-600 dark:text-amber-400">Partial Amount Paid (₹) *</label>
+                        <input type="number" id="formPartialRent" min="0" placeholder="e.g. 5000" class="w-full theme-input border border-amber-500/50 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-amber-600 dark:text-amber-300 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all">
+                    </div>
+                </div>
+
+                <!-- Section Divider -->
+                <div class="relative flex py-2 items-center mb-4">
+                    <div class="flex-grow border-t theme-table-row"></div>
+                    <span class="flex-shrink-0 mx-3 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-3.5 h-3.5"></i> Meter Readings
+                    </span>
+                    <div class="flex-grow border-t theme-table-row"></div>
+                </div>
+
+                <!-- Meter Readings Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-medium theme-text-muted">Initial (Move-in)</label>
+                        <input type="number" id="formInitial" min="0" required placeholder="0" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-medium theme-text-muted">Prev. Month</label>
+                        <input type="number" id="formPrev" min="0" required placeholder="100" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-medium theme-text-muted">Curr. Month</label>
+                        <input type="number" id="formCurr" min="0" required placeholder="250" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400">Consumed</label>
+                        <input type="number" id="formConsumed" readonly class="w-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 rounded-lg px-3 py-2 text-xs sm:text-sm text-indigo-700 dark:text-indigo-300 font-mono font-semibold focus:outline-none cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Electricity Payment Status *</label>
+                        <select id="formElecStatus" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="flex justify-end gap-3 pt-4 border-t theme-table-row shrink-0">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border border-indigo-500 shadow-md transition-all">Save Record</button>
+                </div>
+            </form>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Property / Unit</label>
-          <input type="text" id="tenantUnit" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Apt 4B">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Monthly Rent ($)</label>
-          <input type="number" id="tenantRent" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Status</label>
-          <select id="tenantStatus" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Overdue">Overdue</option>
-          </select>
-        </div>
-        <div class="flex gap-2 pt-2">
-          <button type="button" id="closeModalBtn" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-semibold">Cancel</button>
-          <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-semibold">Save to Cloud</button>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <script>
-    // 1. Firebase Configuration (Your keys applied)
-    const firebaseConfig = {
-      apiKey: "AIzaSyAKPpc0loQCoXWm_xJP26XZ8GO9Ctfor9k",
-      authDomain: "rentpulse-2026.firebaseapp.com",
-      projectId: "rentpulse-2026",
-      storageBucket: "rentpulse-2026.firebasestorage.app",
-      messagingSenderId: "71328800274",
-      appId: "1:71328800274:web:6426421c6415a4a87df403"
-    };
+    <!-- Application Script with Firebase Connected -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKPpc0loQCoXWm_xJP26XZ8GO9Ctfor9k",
+            authDomain: "rentpulse-2026.firebaseapp.com",
+            projectId: "rentpulse-2026",
+            storageBucket: "rentpulse-2026.firebasestorage.app",
+            messagingSenderId: "713288002874",
+            appId: "1:713288002874:web:6426421c6415a4a87df403"
+        };
 
-    // DOM Elements
-    const authSection = document.getElementById('authSection');
-    const dashboardSection = document.getElementById('dashboardSection');
-    const authForm = document.getElementById('authForm');
-    const authEmail = document.getElementById('authEmail');
-    const authPassword = document.getElementById('authPassword');
-    const authBtn = document.getElementById('authBtn');
-    const authError = document.getElementById('authError');
-    const toggleAuthMode = document.getElementById('toggleAuthMode');
-    const authSubtitle = document.getElementById('authSubtitle');
-    const userEmailDisplay = document.getElementById('userEmailDisplay');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const tenantTableBody = document.getElementById('tenantTableBody');
-    const tenantModal = document.getElementById('tenantModal');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const tenantForm = document.getElementById('tenantForm');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    let isSignUpMode = false;
-    let currentUser = null;
-    let unsubscribeSnapshot = null;
+        // Init Lucide icons
+        lucide.createIcons();
 
-    // Toggle Sign In / Sign Up
-    toggleAuthMode.addEventListener('click', () => {
-      isSignUpMode = !isSignUpMode;
-      authBtn.innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
-      toggleAuthMode.innerText = isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
-      authSubtitle.innerText = isSignUpMode ? 'Create a new account' : 'Cloud-synced Property Management';
-      authError.classList.add('hidden');
-    });
+        let tenants = [];
+        let currentUser = null;
 
-    // Handle Authentication Form Submit
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      authError.classList.add('hidden');
-      const email = authEmail.value;
-      const password = authPassword.value;
+        // Firebase Auth UI Logic
+        const authOverlay = document.getElementById('authOverlay');
+        const authForm = document.getElementById('authForm');
+        const authError = document.getElementById('authError');
 
-      try {
-        if (isSignUpMode) {
-          await auth.createUserWithEmailAndPassword(email, password);
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-        }
-      } catch (err) {
-        authError.innerText = err.message;
-        authError.classList.remove('hidden');
-      }
-    });
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.classList.add('hidden');
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const btn = document.getElementById('authSubmitBtn');
+            btn.innerHTML = `<span>Processing...</span>`;
 
-    // Logout
-    logoutBtn.addEventListener('click', () => auth.signOut());
-
-    // Auth State Listener
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        currentUser = user;
-        userEmailDisplay.innerText = user.email;
-        authSection.classList.add('hidden');
-        dashboardSection.classList.remove('hidden');
-        listenToCloudData();
-      } else {
-        currentUser = null;
-        if (unsubscribeSnapshot) unsubscribeSnapshot();
-        dashboardSection.classList.add('hidden');
-        authSection.classList.remove('hidden');
-      }
-    });
-
-    // Real-Time Cloud Listener (Syncs across mobile & laptop)
-    function listenToCloudData() {
-      if (!currentUser) return;
-
-      const userTenantsRef = db.collection('users').doc(currentUser.uid).collection('tenants');
-
-      unsubscribeSnapshot = userTenantsRef.onSnapshot((snapshot) => {
-        tenantTableBody.innerHTML = '';
-        if (snapshot.empty) {
-          tenantTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">No tenants added yet. Click "+ Add Tenant" to create one.</td></tr>`;
-          return;
-        }
-
-        snapshot.forEach((doc) => {
-          const tenant = doc.data();
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-gray-50 transition border-b";
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-semibold text-gray-800">${tenant.name}</td>
-            <td class="py-3 px-4 text-gray-600">${tenant.unit}</td>
-            <td class="py-3 px-4 font-mono">${tenant.rent}</td>
-            <td class="py-3 px-4">
-              <span class="px-2.5 py-1 text-xs font-semibold rounded-full ${getStatusBadge(tenant.status)}">
-                ${tenant.status}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-right">
-              <button onclick="deleteTenant('${doc.id}')" class="text-red-500 hover:text-red-700 text-xs font-semibold">Delete</button>
-            </td>
-          `;
-          tenantTableBody.appendChild(tr);
+            try {
+                // Try logging in
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                // If login fails, try automatic registration
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } catch (regErr) {
+                    authError.innerText = regErr.message.replace('Firebase: ', '');
+                    authError.classList.remove('hidden');
+                    btn.innerHTML = `<span>Continue to Dashboard</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                    lucide.createIcons();
+                }
+            }
         });
-      });
-    }
 
-    function getStatusBadge(status) {
-      if (status === 'Paid') return 'bg-green-100 text-green-700';
-      if (status === 'Pending') return 'bg-yellow-100 text-yellow-700';
-      return 'bg-red-100 text-red-700';
-    }
+        // Listen for Login/Logout state changes globally
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                authOverlay.classList.add('hidden');
+                await loadFirebaseData();
+            } else {
+                currentUser = null;
+                authOverlay.classList.remove('hidden');
+                tenants = [];
+                renderTable();
+            }
+        });
 
-    // Modal Control
-    openModalBtn.addEventListener('click', () => tenantModal.classList.remove('hidden'));
-    closeModalBtn.addEventListener('click', () => tenantModal.classList.add('hidden'));
+        window.logoutApp = () => {
+            signOut(auth);
+        };
 
-    // Add New Tenant to Firestore Cloud
-    tenantForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
+        // Firebase Data Operations
+        async function loadFirebaseData() {
+            if (!currentUser) return;
+            try {
+                const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+                if (docSnap.exists()) {
+                    tenants = docSnap.data().tenants || [];
+                } else {
+                    // Populate default template for new users
+                    tenants = [
+                        { id: generateId(), name: "Ramesh Kumar", contact: "9876543210", date: "2023-01-15", unit: "2BHK", rent: 15000, rentStatus: "Paid", partialRent: 0, initial: 100, prev: 1250, curr: 1375, elecStatus: "Pending" },
+                        { id: generateId(), name: "Priya Sharma", contact: "9123456780", date: "2023-05-01", unit: "1RK", rent: 8000, rentStatus: "Pending", partialRent: 0, initial: 50, prev: 400, curr: 460, elecStatus: "Paid" },
+                        { id: generateId(), name: "Amit Patel", contact: "9988776655", date: "2022-11-10", unit: "3RK", rent: 22000, rentStatus: "Partial", partialRent: 10000, initial: 200, prev: 2100, curr: 2250, elecStatus: "Pending" }
+                    ];
+                    await saveFirebaseData();
+                }
+                renderTable();
+            } catch (e) {
+                console.error("Error fetching data:", e);
+            }
+        }
 
-      const newTenant = {
-        name: document.getElementById('tenantName').value,
-        unit: document.getElementById('tenantUnit').value,
-        rent: Number(document.getElementById('tenantRent').value),
-        status: document.getElementById('tenantStatus').value,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
+        async function saveFirebaseData() {
+            if (!currentUser) return;
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), { tenants: tenants });
+            } catch (e) {
+                console.error("Error saving data:", e);
+            }
+        }
 
-      try {
-        await db.collection('users').doc(currentUser.uid).collection('tenants').add(newTenant);
-        tenantForm.reset();
-        tenantModal.classList.add('hidden');
-      } catch (err) {
-        alert("Error saving: " + err.message);
-      }
-    });
+        // Theme Switcher Logic
+        const THEME_KEY = 'rentpulse_theme_mode';
+        let isDarkMode = localStorage.getItem(THEME_KEY) !== 'light'; 
 
-    // Delete Tenant from Cloud
-    async function deleteTenant(id) {
-      if (!currentUser || !confirm("Delete this tenant record?")) return;
-      try {
-        await db.collection('users').doc(currentUser.uid).collection('tenants').doc(id).delete();
-      } catch (err) {
-        alert("Error deleting: " + err.message);
-      }
-    }
-  </script>
+        function applyTheme() {
+            const htmlRoot = document.getElementById('htmlRoot');
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+
+            if (isDarkMode) {
+                htmlRoot.classList.add('dark');
+                if(icon) {
+                    icon.setAttribute('data-lucide', 'sun');
+                    icon.className = "w-4 h-4 text-amber-400";
+                    label.innerText = "Light Mode";
+                }
+                localStorage.setItem(THEME_KEY, 'dark');
+            } else {
+                htmlRoot.classList.remove('dark');
+                if(icon) {
+                    icon.setAttribute('data-lucide', 'moon');
+                    icon.className = "w-4 h-4 text-indigo-600";
+                    label.innerText = "Dark Mode";
+                }
+                localStorage.setItem(THEME_KEY, 'light');
+            }
+            lucide.createIcons();
+        }
+
+        window.toggleTheme = () => {
+            isDarkMode = !isDarkMode;
+            applyTheme();
+        };
+        applyTheme();
+
+        // DOM References
+        const desktopTableBody = document.getElementById('desktopTableBody');
+        const mobileCardList = document.getElementById('mobileCardList');
+        const emptyState = document.getElementById('emptyState');
+        const modal = document.getElementById('tenantModal');
+        const form = document.getElementById('tenantForm');
+        const prevInput = document.getElementById('formPrev');
+        const currInput = document.getElementById('formCurr');
+        const consInput = document.getElementById('formConsumed');
+        const rentStatusSelect = document.getElementById('formRentStatus');
+        const partialContainer = document.getElementById('partialAmountContainer');
+        const partialRentInput = document.getElementById('formPartialRent');
+
+        function togglePartialInput() {
+            if (rentStatusSelect.value === 'Partial') {
+                partialContainer.classList.remove('hidden');
+                partialRentInput.setAttribute('required', 'true');
+            } else {
+                partialContainer.classList.add('hidden');
+                partialRentInput.removeAttribute('required');
+                partialRentInput.value = '';
+            }
+        }
+
+        rentStatusSelect.addEventListener('change', togglePartialInput);
+
+        function calculateUnits() {
+            const prev = parseFloat(prevInput.value) || 0;
+            const curr = parseFloat(currInput.value) || 0;
+            consInput.value = curr >= prev ? (curr - prev) : 0;
+        }
+
+        prevInput.addEventListener('input', calculateUnits);
+        currInput.addEventListener('input', calculateUnits);
+
+        function generateId() {
+            return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+        }
+
+        function formatDateReadable(dateString) {
+            if (!dateString) return '';
+            const parts = dateString.split('-');
+            if (parts.length !== 3) return dateString;
+            const year = parts[0];
+            const monthIdx = parseInt(parts[1], 10) - 1;
+            const day = parts[2];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${day}-${months[monthIdx] || parts[1]}-${year}`;
+        }
+
+        function getStatusBadgeHtml(status, partialRent = 0, totalRent = 0) {
+            if (status === 'Paid') {
+                return `<span class="badge-paid inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-slow"></span> Paid
+                        </span>`;
+            } else if (status === 'Pending') {
+                return `<span class="badge-pending inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Pending
+                        </span>`;
+            } else {
+                return `<span class="badge-partial inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20" title="Paid: ₹${partialRent.toLocaleString('en-IN')} / Due: ₹${(totalRent - partialRent).toLocaleString('en-IN')}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Partial (₹${partialRent.toLocaleString('en-IN')})
+                        </span>`;
+            }
+        }
+
+        function renderTable() {
+            const searchQ = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filterRent = document.getElementById('filterRent').value;
+            const filterElec = document.getElementById('filterElec').value;
+
+            const filtered = tenants.filter(t => {
+                const matchesSearch = t.name.toLowerCase().includes(searchQ) || 
+                                      t.unit.toLowerCase().includes(searchQ) ||
+                                      t.contact.includes(searchQ);
+                const matchesRent = filterRent === 'All' || t.rentStatus === filterRent;
+                const matchesElec = filterElec === 'All' || t.elecStatus === filterElec;
+                return matchesSearch && matchesRent && matchesElec;
+            });
+
+            updateKPIs(filtered);
+
+            if (filtered.length === 0) {
+                desktopTableBody.innerHTML = '';
+                mobileCardList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+
+            desktopTableBody.innerHTML = filtered.map(t => {
+                const consumed = t.curr - t.prev;
+                const formattedDate = formatDateReadable(t.date);
+                const pRent = t.partialRent || 0;
+                
+                return `
+                <tr class="theme-table-row transition-colors group">
+                    <td class="px-5 py-3.5">
+                        <div class="flex flex-col">
+                            <span class="font-semibold theme-text-primary">${t.name}</span>
+                            <span class="text-xs font-mono mt-0.5 flex items-center gap-1 theme-text-muted">
+                                <i data-lucide="phone" class="w-3 h-3 theme-text-subtle"></i> ${t.contact}
+                            </span>
+                            <span class="text-[10px] theme-text-subtle mt-0.5">Joined: ${formattedDate}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3.5">
+                        <span class="badge-unit px-2.5 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 rounded-md border border-indigo-500/20">${t.unit}</span>
+                    </td>
+                    <td class="px-4 py-3.5 text-right font-mono font-semibold theme-text-primary">
+                        ₹${t.rent.toLocaleString('en-IN')}
+                        ${t.rentStatus === 'Partial' ? `<div class="text-[10px] text-amber-600 dark:text-amber-400">Paid: ₹${pRent.toLocaleString('en-IN')}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-3.5 text-center">${getStatusBadgeHtml(t.rentStatus, pRent, t.rent)}</td>
+                    <td class="px-4 py-3.5 text-right">
+                        <div class="flex items-center justify-end gap-1.5 text-xs font-mono">
+                            <span class="theme-text-muted">${t.prev}</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 theme-text-subtle"></i>
+                            <span class="font-medium theme-text-primary">${t.curr}</span>
+                        </div>
+                        <div class="text-[10px] theme-text-subtle mt-0.5">Move-in Init: ${t.initial}</div>
+                    </td>
+                    <td class="px-4 py-3.5 text-right font-mono font-semibold unit-consumed text-amber-500 dark:text-amber-400">${consumed} <span class="text-[11px] font-sans font-normal theme-text-subtle">u</span></td>
+                    <td class="px-4 py-3.5 text-center">${getStatusBadgeHtml(t.elecStatus)}</td>
+                    <td class="px-5 py-3.5 text-right">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <button onclick="editTenant('${t.id}')" class="p-1.5 theme-action-btn hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-lg border transition-colors" title="Edit">
+                                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="deleteTenant('${t.id}')" class="p-1.5 theme-action-btn hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-lg border transition-colors" title="Delete">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+
+            mobileCardList.innerHTML = filtered.map(t => {
+                const consumed = t.curr - t.prev;
+                const formattedDate = formatDateReadable(t.date);
+                const pRent = t.partialRent || 0;
+
+                return `
+                <div class="p-4 flex flex-col gap-3 transition-colors">
+                    <div class="flex justify-between items-start gap-2">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm font-bold theme-text-primary">${t.name}</h4>
+                                <span class="badge-unit px-2 py-0.5 text-[10px] font-semibold bg-indigo-500/10 text-indigo-400 rounded border border-indigo-500/20">${t.unit}</span>
+                            </div>
+                            <p class="text-xs font-mono mt-0.5 flex items-center gap-1 theme-text-muted">
+                                <i data-lucide="phone" class="w-3 h-3 theme-text-subtle"></i> ${t.contact}
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="editTenant('${t.id}')" class="p-2 theme-action-btn hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-lg border">
+                                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="deleteTenant('${t.id}')" class="p-2 theme-action-btn hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-lg border">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 theme-table-head p-3 rounded-lg border theme-table-row text-xs">
+                        <div>
+                            <span class="text-[10px] theme-text-subtle block uppercase tracking-wider font-medium">Rent Amount</span>
+                            <span class="font-mono font-bold text-sm theme-text-primary">₹${t.rent.toLocaleString('en-IN')}</span>
+                            <div class="mt-1">${getStatusBadgeHtml(t.rentStatus, pRent, t.rent)}</div>
+                        </div>
+                        <div>
+                            <span class="text-[10px] theme-text-subtle block uppercase tracking-wider font-medium">Electricity Units</span>
+                            <span class="font-mono font-bold unit-consumed text-amber-500 dark:text-amber-400 text-sm">${consumed} kWh</span>
+                            <div class="mt-1">${getStatusBadgeHtml(t.elecStatus)}</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-[11px] theme-text-muted pt-1 border-t theme-table-row">
+                        <span>Joined: <strong class="theme-text-primary">${formattedDate}</strong></span>
+                        <span class="font-mono">Meter: ${t.prev} → ${t.curr}</span>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function updateKPIs(data) {
+            document.getElementById('kpi-tenants').innerText = data.length;
+            
+            let rentCol = 0;
+            let rentPen = 0;
+            let totalUnits = 0;
+
+            data.forEach(t => {
+                if (t.rentStatus === 'Paid') {
+                    rentCol += t.rent;
+                } else if (t.rentStatus === 'Pending') {
+                    rentPen += t.rent;
+                } else if (t.rentStatus === 'Partial') {
+                    const paidPart = t.partialRent || 0;
+                    rentCol += paidPart;
+                    rentPen += Math.max(0, t.rent - paidPart);
+                }
+                
+                totalUnits += (t.curr - t.prev);
+            });
+
+            document.getElementById('kpi-rent-col').innerText = '₹' + rentCol.toLocaleString('en-IN');
+            document.getElementById('kpi-rent-pen').innerText = '₹' + rentPen.toLocaleString('en-IN');
+            document.getElementById('kpi-units').innerText = totalUnits.toLocaleString('en-IN');
+        }
+
+        window.openModal = (id = null) => {
+            form.reset();
+            consInput.value = '';
+            
+            if (id) {
+                document.getElementById('modalTitle').innerText = 'Edit Tenant Record';
+                const t = tenants.find(x => x.id === id);
+                if(t) {
+                    document.getElementById('formId').value = t.id;
+                    document.getElementById('formName').value = t.name;
+                    document.getElementById('formContact').value = t.contact;
+                    document.getElementById('formDate').value = t.date;
+                    document.getElementById('formUnit').value = t.unit;
+                    document.getElementById('formRent').value = t.rent;
+                    document.getElementById('formRentStatus').value = t.rentStatus;
+                    document.getElementById('formPartialRent').value = t.partialRent || '';
+                    document.getElementById('formInitial').value = t.initial;
+                    document.getElementById('formPrev').value = t.prev;
+                    document.getElementById('formCurr').value = t.curr;
+                    document.getElementById('formElecStatus').value = t.elecStatus;
+                    calculateUnits();
+                }
+            } else {
+                document.getElementById('modalTitle').innerText = 'Add New Tenant';
+                document.getElementById('formId').value = '';
+                document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
+            }
+            togglePartialInput();
+            modal.classList.add('active');
+        };
+
+        window.closeModal = () => {
+            modal.classList.remove('active');
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const rentStatusVal = document.getElementById('formRentStatus').value;
+            const partialVal = parseFloat(document.getElementById('formPartialRent').value) || 0;
+
+            const payload = {
+                name: document.getElementById('formName').value.trim(),
+                contact: document.getElementById('formContact').value.trim(),
+                date: document.getElementById('formDate').value,
+                unit: document.getElementById('formUnit').value.trim(),
+                rent: parseFloat(document.getElementById('formRent').value) || 0,
+                rentStatus: rentStatusVal,
+                partialRent: rentStatusVal === 'Partial' ? partialVal : 0,
+                initial: parseFloat(document.getElementById('formInitial').value) || 0,
+                prev: parseFloat(document.getElementById('formPrev').value) || 0,
+                curr: parseFloat(document.getElementById('formCurr').value) || 0,
+                elecStatus: document.getElementById('formElecStatus').value
+            };
+
+            const fId = document.getElementById('formId').value;
+            
+            if (fId) {
+                const idx = tenants.findIndex(t => t.id === fId);
+                if(idx > -1) tenants[idx] = { ...tenants[idx], ...payload };
+            } else {
+                tenants.push({ id: generateId(), ...payload });
+            }
+
+            await saveFirebaseData();
+            renderTable();
+            window.closeModal();
+        });
+
+        window.editTenant = (id) => window.openModal(id);
+        
+        window.deleteTenant = async (id) => {
+            if(confirm('Are you sure you want to remove this tenant record?')) {
+                tenants = tenants.filter(t => t.id !== id);
+                await saveFirebaseData();
+                renderTable();
+            }
+        };
+
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        document.getElementById('filterRent').addEventListener('change', renderTable);
+        document.getElementById('filterElec').addEventListener('change', renderTable);
+
+        window.exportCSV = () => {
+            if (tenants.length === 0) return alert('No data to export.');
+            
+            const headers = ['Date Joined', 'Tenant Name', 'Contact Number', 'Unit Type', 'Base Rent (INR)', 'Rent Status', 'Partial Rent Paid (INR)', 'Initial Reading', 'Prev Reading', 'Curr Reading', 'Consumed Units', 'Elec Payment Status'];
+            
+            const rows = tenants.map(t => [
+                `"${formatDateReadable(t.date)}"`,
+                `"${t.name.replace(/"/g, '""')}"`,
+                `"${t.contact}"`,
+                `"${t.unit.replace(/"/g, '""')}"`,
+                t.rent,
+                `"${t.rentStatus}"`,
+                t.rentStatus === 'Partial' ? (t.partialRent || 0) : 0,
+                t.initial,
+                t.prev,
+                t.curr,
+                (t.curr - t.prev),
+                `"${t.elecStatus}"`
+            ]);
+
+            const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\r\n");
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `RentPulse_Export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        };
+    </script>
 </body>
 </html>
