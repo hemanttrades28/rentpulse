@@ -535,12 +535,32 @@
                 const docRef = doc(db, 'users', currentUser.uid);
                 const docSnap = await getDoc(docRef);
 
+                // Firebase is the ONLY source of tenant records.
+                // Never inject or generate tenant/demo records locally.
                 if (docSnap.exists()) {
-                    tenants = docSnap.data().tenants || [];
+                    tenants = Array.isArray(docSnap.data().tenants) ? docSnap.data().tenants : [];
+
+                    // Remove the three demo records from older versions, if they were
+                    // already persisted to Firebase by the previous seeded-data logic.
+                    // This is a one-time cleanup; all other Firebase records are preserved.
+                    const demoContacts = new Set(['9876543210', '9123456780', '9988776655']);
+                    const demoNames = new Set(['Ramesh Kumar', 'Priya Sharma', 'Amit Patel']);
+
+                    const cleanedTenants = tenants.filter(t => {
+                        const contact = String(t?.contact || '').trim();
+                        const name = String(t?.name || '').trim();
+                        return !(demoContacts.has(contact) && demoNames.has(name));
+                    });
+
+                    if (cleanedTenants.length !== tenants.length) {
+                        tenants = cleanedTenants;
+                        await setDoc(docRef, { tenants }, { merge: true });
+                    }
                 } else {
-                    // Fix: Start completely empty instead of injecting random dummy data
-                    tenants = []; 
+                    // New Firebase user: start completely empty.
+                    tenants = [];
                 }
+
                 renderTable();
             } catch (error) {
                 console.error("Error loading Firebase data:", error);
