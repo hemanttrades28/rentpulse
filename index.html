@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="dark" id="htmlRoot">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RentPulse - Rental & Electricity Management</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -88,13 +89,35 @@
             color: #64748b;
         }
 
-        html.dark .theme-text-primary { color: #f8fafc; }
-        html.dark .theme-text-muted { color: #94a3b8; }
-        html.dark .theme-text-subtle { color: #64748b; }
-        html.dark .theme-table-head { background-color: rgba(0, 0, 0, 0.25); border-color: rgba(51, 65, 85, 0.8); }
-        html.dark .theme-table-row { border-color: rgba(30, 41, 59, 0.5); }
-        html.dark .theme-table-row:hover { background-color: rgba(0, 0, 0, 0.2); }
-        html.dark .theme-action-btn { background-color: rgba(0, 0, 0, 0.3); border-color: rgba(51, 65, 85, 0.6); }
+        html.dark .theme-text-primary {
+            color: #f8fafc;
+        }
+
+        html.dark .theme-text-muted {
+            color: #94a3b8;
+        }
+
+        html.dark .theme-text-subtle {
+            color: #64748b;
+        }
+
+        html.dark .theme-table-head {
+            background-color: rgba(0, 0, 0, 0.25);
+            border-color: rgba(51, 65, 85, 0.8);
+        }
+
+        html.dark .theme-table-row {
+            border-color: rgba(30, 41, 59, 0.5);
+        }
+
+        html.dark .theme-table-row:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        html.dark .theme-action-btn {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-color: rgba(51, 65, 85, 0.6);
+        }
 
         /* --- LIGHT THEME STYLES (ENHANCED VISIBILITY & CONTRAST) --- */
         html:not(.dark) body {
@@ -128,148 +151,259 @@
             color: #94a3b8;
         }
 
-        html:not(.dark) .theme-text-primary { color: #0f172a; }
-        html:not(.dark) .theme-text-muted { color: #475569; }
-        html:not(.dark) .theme-text-subtle { color: #64748b; }
-        html:not(.dark) .theme-table-head { background-color: #f8fafc; border-color: #e2e8f0; }
-        html:not(.dark) .theme-table-row { border-color: #e2e8f0; }
-        html:not(.dark) .theme-table-row:hover { background-color: #f8fafc; }
-        html:not(.dark) .theme-action-btn { background-color: #f8fafc; border-color: #cbd5e1; }
+        html:not(.dark) .theme-text-primary {
+            color: #0f172a;
+        }
+
+        html:not(.dark) .theme-text-muted {
+            color: #475569;
+        }
+
+        html:not(.dark) .theme-text-subtle {
+            color: #64748b;
+        }
+
+        html:not(.dark) .theme-table-head {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
+
+        html:not(.dark) .theme-table-row {
+            border-color: #e2e8f0;
+        }
+
+        html:not(.dark) .theme-table-row:hover {
+            background-color: #f8fafc;
+        }
+
+        html:not(.dark) .theme-action-btn {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
 
         /* Light Theme Status Badges High Contrast Overrides */
-        html:not(.dark) .badge-paid { background-color: #dcfce7 !important; color: #15803d !important; border-color: #86efac !important; }
-        html:not(.dark) .badge-pending { background-color: #ffe4e6 !important; color: #be123c !important; border-color: #fca5a5 !important; }
-        html:not(.dark) .badge-partial { background-color: #fef3c7 !important; color: #b45309 !important; border-color: #fde68a !important; }
-        html:not(.dark) .badge-unit { background-color: #e0e7ff !important; color: #4338ca !important; border-color: #c7d2fe !important; }
-        html:not(.dark) .unit-consumed { color: #d97706 !important; }
+        html:not(.dark) .badge-paid {
+            background-color: #dcfce7 !important;
+            color: #15803d !important;
+            border-color: #86efac !important;
+        }
+
+        html:not(.dark) .badge-pending {
+            background-color: #ffe4e6 !important;
+            color: #be123c !important;
+            border-color: #fca5a5 !important;
+        }
+
+        html:not(.dark) .badge-partial {
+            background-color: #fef3c7 !important;
+            color: #b45309 !important;
+            border-color: #fde68a !important;
+        }
+
+        html:not(.dark) .badge-unit {
+            background-color: #e0e7ff !important;
+            color: #4338ca !important;
+            border-color: #c7d2fe !important;
+        }
+
+        html:not(.dark) .unit-consumed {
+            color: #d97706 !important;
+        }
 
         /* Subtle Grid Background */
         .bg-grid-pattern {
             background-image: linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+                linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
             background-size: 32px 32px;
             mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
             -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 9999px;
+        }
 
         /* Modal Smooth Animations */
-        .modal-overlay { opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; pointer-events: none; }
-        .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
-        .modal-content { transform: translateY(15px) scale(0.97); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            transform: translateY(15px) scale(0.97);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
 
         /* Hide Number Input Arrows */
-        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
+
 <body class="relative min-h-screen flex flex-col pb-12 sm:pb-8">
 
     <!-- Firebase Auth Overlay -->
-    <div id="authOverlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md transition-opacity">
+    <div id="authOverlay"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md transition-opacity">
         <div class="theme-card border rounded-2xl p-6 sm:p-8 w-full max-w-sm shadow-2xl mx-4 relative overflow-hidden">
             <div class="flex items-center justify-center gap-2 mb-6">
                 <div class="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 shadow-sm">
                     <i data-lucide="zap" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
                 </div>
-                <h2 class="text-xl font-bold theme-text-primary tracking-tight">Rent<span class="text-indigo-600 dark:text-indigo-400">Pulse</span> Sync</h2>
+                <h2 class="text-xl font-bold theme-text-primary tracking-tight">Rent<span
+                        class="text-indigo-600 dark:text-indigo-400">Pulse</span> Sync</h2>
             </div>
             <!-- Mode Tabs -->
             <div class="grid grid-cols-2 gap-1 p-1 mb-5 theme-action-btn border rounded-lg text-xs font-semibold">
-                <button type="button" id="tabSignIn" class="py-2 rounded-md bg-indigo-600 text-white transition-all">Sign In</button>
-                <button type="button" id="tabSignUp" class="py-2 rounded-md theme-text-muted transition-all">Create Account</button>
+                <button type="button" id="tabSignIn"
+                    class="py-2 rounded-md bg-indigo-600 text-white transition-all">Sign In</button>
+                <button type="button" id="tabSignUp" class="py-2 rounded-md theme-text-muted transition-all">Create
+                    Account</button>
             </div>
 
             <form id="authForm" class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium theme-text-muted">Email Address</label>
-                    <input type="email" id="authEmail" required autocomplete="email" placeholder="you@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    <input type="email" id="authEmail" required autocomplete="email" placeholder="you@domain.com"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium theme-text-muted">Password</label>
                     <div class="relative">
-                        <input type="password" id="authPassword" required minlength="6" autocomplete="current-password" placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
-                        <button type="button" id="togglePassword" aria-label="Show password" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 theme-text-subtle hover:theme-text-primary transition-colors">
+                        <input type="password" id="authPassword" required minlength="6" autocomplete="current-password"
+                            placeholder="••••••••"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                        <button type="button" id="togglePassword" aria-label="Show password"
+                            class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 theme-text-subtle hover:theme-text-primary transition-colors">
                             <i data-lucide="eye" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
                 <div class="space-y-1.5 hidden" id="confirmPasswordContainer">
                     <label class="text-xs font-medium theme-text-muted">Confirm Password</label>
-                    <input type="password" id="authConfirmPassword" minlength="6" autocomplete="new-password" placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    <input type="password" id="authConfirmPassword" minlength="6" autocomplete="new-password"
+                        placeholder="••••••••"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" id="forgotPasswordBtn" class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">Forgot password?</button>
+                    <button type="button" id="forgotPasswordBtn"
+                        class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">Forgot
+                        password?</button>
                 </div>
-                <p id="authError" class="text-xs font-medium text-rose-500 hidden text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"></p>
-                <p id="authNotice" class="text-xs font-medium text-emerald-600 dark:text-emerald-400 hidden text-center bg-emerald-500/10 py-2 rounded-lg border border-emerald-500/20"></p>
-                <button type="submit" id="authSubmitBtn" class="w-full py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
+                <p id="authError"
+                    class="text-xs font-medium text-rose-500 hidden text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20">
+                </p>
+                <p id="authNotice"
+                    class="text-xs font-medium text-emerald-600 dark:text-emerald-400 hidden text-center bg-emerald-500/10 py-2 rounded-lg border border-emerald-500/20">
+                </p>
+                <button type="submit" id="authSubmitBtn"
+                    class="w-full py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
                     <span id="authSubmitLabel">Sign In to Dashboard</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
-            <p class="text-[11px] theme-text-subtle text-center mt-4">New accounts must verify their email address before the dashboard unlocks.</p>
+            <p class="text-[11px] theme-text-subtle text-center mt-4">New accounts must verify their email address
+                before the dashboard unlocks.</p>
         </div>
     </div>
 
     <!-- Ambient Glow & Background Grid -->
     <div class="fixed inset-0 z-0 bg-grid-pattern pointer-events-none"></div>
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] sm:w-[800px] h-[250px] sm:h-[400px] theme-glow rounded-full blur-[90px] sm:blur-[120px] pointer-events-none z-0"></div>
+    <div
+        class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] sm:w-[800px] h-[250px] sm:h-[400px] theme-glow rounded-full blur-[90px] sm:blur-[120px] pointer-events-none z-0">
+    </div>
 
     <!-- Header -->
-    <header class="relative z-10 sticky top-0 w-full border-b theme-header backdrop-blur-xl px-4 sm:px-6 py-3.5 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-2.5">
-            <div class="p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 shadow-sm">
-                <i data-lucide="zap" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+    <header
+        class="relative z-30 sticky top-0 w-full border-b theme-header backdrop-blur-xl px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between shadow-sm overflow-hidden">
+        <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <div class="p-1.5 sm:p-2 bg-indigo-500/10 rounded-xl border border-indigo-500/20 shadow-sm">
+                <i data-lucide="zap" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400"></i>
             </div>
             <div>
-                <h1 class="text-lg sm:text-xl font-bold tracking-tight theme-text-primary flex items-center gap-1">
+                <h1 class="text-base sm:text-xl font-bold tracking-tight theme-text-primary flex items-center gap-1">
                     Rent<span class="text-indigo-600 dark:text-indigo-400">Pulse</span>
                 </h1>
                 <p class="text-[10px] theme-text-subtle font-medium hidden sm:block">Rental & Electricity Manager</p>
             </div>
         </div>
-        
-        <div class="flex items-center gap-2 sm:gap-3">
+
+        <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 flex-nowrap">
             <!-- Theme Toggle Button -->
-            <button id="themeToggleBtn" onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-2 theme-action-btn border rounded-lg text-xs font-medium theme-text-primary transition-all active:scale-95 shadow-sm" title="Switch Theme">
+            <button id="themeToggleBtn" onclick="toggleTheme()"
+                class="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 theme-action-btn border rounded-lg text-xs font-medium theme-text-primary transition-all active:scale-95 shadow-sm shrink-0"
+                title="Switch Theme">
                 <i id="themeIcon" data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
-                <span id="themeLabel" class="hidden sm:inline">Light Mode</span>
+                <span id="themeLabel" class="hidden md:inline">Light Mode</span>
+            </button>
+
+            <!-- Send Reminders Button -->
+            <button type="button" id="bulkReminderBtn"
+                class="flex items-center gap-1.5 p-2 sm:px-3.5 sm:py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm shrink-0"
+                title="Send Rent Reminders">
+                <i data-lucide="mail" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+                <span class="hidden md:inline">Send Reminders</span>
+            </button>
+
+            <!-- Export CSV Button -->
+            <button type="button" id="exportCsvBtn"
+                class="flex items-center gap-1.5 p-2 sm:px-3.5 sm:py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm shrink-0"
+                title="Export Data to CSV">
+                <i data-lucide="download" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                <span class="hidden md:inline">Export CSV</span>
+            </button>
+
+            <!-- Add Tenant Button -->
+            <button type="button" id="addTenantBtn"
+                class="flex items-center gap-1.5 p-2 sm:px-4 sm:py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg border border-indigo-500 transition-all shadow-md text-xs sm:text-sm font-medium active:scale-95 shrink-0"
+                title="Add New Tenant">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span class="hidden md:inline">Add Tenant</span>
             </button>
 
             <!-- Logout Button -->
-            <button onclick="logoutApp()" class="flex items-center gap-1.5 px-3 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm" title="Sign Out">
+            <button onclick="logoutApp()"
+                class="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm shrink-0"
+                title="Sign Out">
                 <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
-                <span class="hidden sm:inline">Logout</span>
-            </button>
-
-            <button type="button" id="bulkReminderBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm" title="Send rent reminders">
-                <i data-lucide="mail" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
-                <span class="hidden sm:inline">Send Reminders</span>
-                <span class="sm:hidden">Remind</span>
-            </button>
-
-            <button type="button" id="exportCsvBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm">
-                <i data-lucide="download" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
-                <span class="hidden sm:inline">Export CSV</span>
-                <span class="sm:hidden">Export</span>
-            </button>
-
-            <button type="button" id="addTenantBtn" class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg border border-indigo-500 transition-all shadow-md text-xs sm:text-sm font-medium active:scale-95">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Add Tenant</span>
+                <span class="hidden md:inline">Logout</span>
             </button>
         </div>
     </header>
 
     <!-- Main Content Container -->
     <main class="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 flex flex-col gap-6 sm:gap-8">
-        
+
         <!-- Responsive KPI Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
             <!-- Card 1: Active Tenants -->
@@ -277,39 +411,48 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-xs sm:text-sm theme-text-muted font-medium">Active Tenants</p>
-                        <h2 class="text-2xl sm:text-3xl font-bold mt-1 font-mono tracking-tight theme-text-primary" id="kpi-tenants">0</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mt-1 font-mono tracking-tight theme-text-primary"
+                            id="kpi-tenants">0</h2>
                     </div>
-                    <div class="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                    <div
+                        class="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                         <i data-lucide="users" class="w-5 h-5"></i>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 2: Rent Collected / Pending -->
             <div class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-xs sm:text-sm theme-text-muted font-medium">Rent Col. / Pending (₹)</p>
                         <div class="flex items-baseline gap-1.5 sm:gap-2 mt-1 flex-wrap">
-                            <h2 class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono tracking-tight" id="kpi-rent-col">0</h2>
+                            <h2 class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono tracking-tight"
+                                id="kpi-rent-col">0</h2>
                             <span class="theme-text-subtle text-base font-semibold">/</span>
-                            <span class="text-base sm:text-lg font-medium text-rose-600 dark:text-rose-400 font-mono" id="kpi-rent-pen">0</span>
+                            <span class="text-base sm:text-lg font-medium text-rose-600 dark:text-rose-400 font-mono"
+                                id="kpi-rent-pen">0</span>
                         </div>
                     </div>
-                    <div class="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <div
+                        class="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         <i data-lucide="indian-rupee" class="w-5 h-5"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Card 3: Electricity Consumed -->
-            <div class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group sm:col-span-2 lg:col-span-1">
+            <div
+                class="theme-card backdrop-blur-md border rounded-xl p-4 sm:p-6 transition-all group sm:col-span-2 lg:col-span-1">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-xs sm:text-sm theme-text-muted font-medium">Total Consumed Units</p>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1 font-mono tracking-tight" id="kpi-units">0 <span class="text-xs font-sans font-normal theme-text-subtle">kWh</span></h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1 font-mono tracking-tight"
+                            id="kpi-units">0 <span class="text-xs font-sans font-normal theme-text-subtle">kWh</span>
+                        </h2>
                     </div>
-                    <div class="p-2.5 bg-amber-500/10 rounded-xl text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                    <div
+                        class="p-2.5 bg-amber-500/10 rounded-xl text-amber-600 dark:text-amber-400 border border-amber-500/20">
                         <i data-lucide="lightbulb" class="w-5 h-5"></i>
                     </div>
                 </div>
@@ -317,22 +460,27 @@
         </div>
 
         <!-- Controls: Search & Filters -->
-        <div class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center theme-card p-3 rounded-xl border backdrop-blur-md">
+        <div
+            class="flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center theme-card p-3 rounded-xl border backdrop-blur-md">
             <!-- Search Bar -->
             <div class="relative w-full md:w-80">
-                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-subtle"></i>
-                <input type="text" id="searchInput" placeholder="Search tenant name or unit..." class="w-full theme-input border rounded-lg pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                <i data-lucide="search"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-subtle"></i>
+                <input type="text" id="searchInput" placeholder="Search tenant name or unit..."
+                    class="w-full theme-input border rounded-lg pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
             </div>
 
             <!-- Dropdown Filters -->
             <div class="grid grid-cols-2 gap-2.5 w-full md:w-auto">
-                <select id="filterRent" class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
+                <select id="filterRent"
+                    class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
                     <option value="All">All Rent Status</option>
                     <option value="Paid">Paid</option>
                     <option value="Pending">Pending</option>
                     <option value="Partial">Partial</option>
                 </select>
-                <select id="filterElec" class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
+                <select id="filterElec"
+                    class="w-full theme-input border rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none cursor-pointer">
                     <option value="All">All Elec Status</option>
                     <option value="Paid">Paid</option>
                     <option value="Pending">Pending</option>
@@ -342,12 +490,13 @@
 
         <!-- Data Container -->
         <div class="theme-card backdrop-blur-md border rounded-xl overflow-hidden shadow-sm">
-            
+
             <!-- Desktop Table View -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
-                        <tr class="theme-table-head border-b text-xs font-semibold theme-text-muted uppercase tracking-wider">
+                        <tr
+                            class="theme-table-head border-b text-xs font-semibold theme-text-muted uppercase tracking-wider">
                             <th class="px-5 py-3.5">Tenant Details</th>
                             <th class="px-4 py-3.5">Unit</th>
                             <th class="px-4 py-3.5 text-right">Rent (₹)</th>
@@ -370,7 +519,8 @@
             </div>
 
             <!-- Empty State -->
-            <div id="emptyState" class="hidden flex-col items-center justify-center py-16 theme-text-muted px-4 text-center">
+            <div id="emptyState"
+                class="hidden flex-col items-center justify-center py-16 theme-text-muted px-4 text-center">
                 <div class="p-4 theme-action-btn rounded-full mb-3 border">
                     <i data-lucide="inbox" class="w-8 h-8"></i>
                 </div>
@@ -381,18 +531,22 @@
     </main>
 
     <!-- Modal Form (Add/Edit Tenant) -->
-    <div id="tenantModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div id="tenantModal"
+        class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
-        
+
         <!-- Modal Card Container -->
-        <div class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+        <div
+            class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
             <!-- Modal Header -->
             <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
-                <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2" id="modalTitle">
+                <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2"
+                    id="modalTitle">
                     Add New Tenant
                 </h3>
-                <button onclick="closeModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                <button onclick="closeModal()"
+                    class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -400,36 +554,42 @@
             <!-- Modal Form Body -->
             <form id="tenantForm" class="p-4 sm:p-6 overflow-y-auto flex-1">
                 <input type="hidden" id="formId">
-                
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                     <!-- Tenant Name -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Tenant Name *</label>
-                        <input type="text" id="formName" required placeholder="Full Name" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="text" id="formName" required placeholder="Full Name"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
-                    
+
                     <!-- Contact -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Contact Number *</label>
-                        <input type="tel" id="formContact" required placeholder="10-digit phone number" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="tel" id="formContact" required placeholder="10-digit phone number"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
 
                     <!-- Email -->
                     <div class="space-y-1.5 sm:col-span-2">
-                        <label class="text-xs font-medium theme-text-muted">Email Address <span class="theme-text-subtle font-normal">(for rent reminders)</span></label>
-                        <input type="email" id="formEmail" placeholder="tenant@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <label class="text-xs font-medium theme-text-muted">Email Address <span
+                                class="theme-text-subtle font-normal">(for rent reminders)</span></label>
+                        <input type="email" id="formEmail" placeholder="tenant@domain.com"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
 
                     <!-- Date Joined -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Date Joined *</label>
-                        <input type="date" id="formDate" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="date" id="formDate" required
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
 
                     <!-- Unit Type -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Unit Type *</label>
-                        <input list="unitTypes" id="formUnit" required placeholder="e.g. 2BHK, 1RK, Shop 1" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input list="unitTypes" id="formUnit" required placeholder="e.g. 2BHK, 1RK, Shop 1"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                         <datalist id="unitTypes">
                             <option value="2BHK"></option>
                             <option value="3RK"></option>
@@ -443,13 +603,15 @@
                     <!-- Base Rent -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Base Rent Amount (₹) *</label>
-                        <input type="number" id="formRent" min="0" required placeholder="12000" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="number" id="formRent" min="0" required placeholder="12000"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
 
                     <!-- Rent Status -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Rent Payment Status *</label>
-                        <select id="formRentStatus" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
+                        <select id="formRentStatus" required
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
                             <option value="Paid">Paid</option>
                             <option value="Pending">Pending</option>
                             <option value="Partial">Partial</option>
@@ -458,15 +620,18 @@
 
                     <!-- Partial Amount Paid Field -->
                     <div class="space-y-1.5 hidden sm:col-span-2" id="partialAmountContainer">
-                        <label class="text-xs font-medium text-amber-600 dark:text-amber-400">Partial Amount Paid (₹) *</label>
-                        <input type="number" id="formPartialRent" min="0" placeholder="e.g. 5000" class="w-full theme-input border border-amber-500/50 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-amber-600 dark:text-amber-300 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all">
+                        <label class="text-xs font-medium text-amber-600 dark:text-amber-400">Partial Amount Paid (₹)
+                            *</label>
+                        <input type="number" id="formPartialRent" min="0" placeholder="e.g. 5000"
+                            class="w-full theme-input border border-amber-500/50 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-amber-600 dark:text-amber-300 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all">
                     </div>
                 </div>
 
                 <!-- Section Divider -->
                 <div class="relative flex py-2 items-center mb-4">
                     <div class="flex-grow border-t theme-table-row"></div>
-                    <span class="flex-shrink-0 mx-3 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span
+                        class="flex-shrink-0 mx-3 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
                         <i data-lucide="zap" class="w-3.5 h-3.5"></i> Meter Readings
                     </span>
                     <div class="flex-grow border-t theme-table-row"></div>
@@ -476,26 +641,31 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-medium theme-text-muted">Initial (Move-in)</label>
-                        <input type="number" id="formInitial" min="0" required placeholder="0" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="number" id="formInitial" min="0" required placeholder="0"
+                            class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-medium theme-text-muted">Prev. Month</label>
-                        <input type="number" id="formPrev" min="0" required placeholder="100" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="number" id="formPrev" min="0" required placeholder="100"
+                            class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-medium theme-text-muted">Curr. Month</label>
-                        <input type="number" id="formCurr" min="0" required placeholder="250" class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                        <input type="number" id="formCurr" min="0" required placeholder="250"
+                            class="w-full theme-input border rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400">Consumed</label>
-                        <input type="number" id="formConsumed" readonly class="w-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 rounded-lg px-3 py-2 text-xs sm:text-sm text-indigo-700 dark:text-indigo-300 font-mono font-semibold focus:outline-none cursor-not-allowed">
+                        <input type="number" id="formConsumed" readonly
+                            class="w-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 rounded-lg px-3 py-2 text-xs sm:text-sm text-indigo-700 dark:text-indigo-300 font-mono font-semibold focus:outline-none cursor-not-allowed">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Electricity Payment Status *</label>
-                        <select id="formElecStatus" required class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
+                        <select id="formElecStatus" required
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all appearance-none">
                             <option value="Paid">Paid</option>
                             <option value="Pending">Pending</option>
                         </select>
@@ -504,22 +674,29 @@
 
                 <!-- Footer Actions -->
                 <div class="flex justify-end gap-3 pt-4 border-t theme-table-row shrink-0">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border border-indigo-500 shadow-md transition-all">Save Record</button>
+                    <button type="button" onclick="closeModal()"
+                        class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border border-indigo-500 shadow-md transition-all">Save
+                        Record</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Rent Reminder Modal (bulk + template settings) -->
-    <div id="reminderModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeReminderModal()"></div>
-        <div class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+    <div id="reminderModal"
+        class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeReminderModal()">
+        </div>
+        <div
+            class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
                 <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2">
                     <i data-lucide="mail" class="w-5 h-5 text-emerald-500"></i> Send Rent Reminders
                 </h3>
-                <button onclick="closeReminderModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                <button onclick="closeReminderModal()"
+                    class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -528,22 +705,28 @@
                 <!-- Template merge fields -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
-                        <label class="text-xs font-medium theme-text-muted">Billing Month (template <code class="text-[10px]">{{month}}</code>)</label>
-                        <input type="text" id="reminderMonth" placeholder="September 2026" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                        <label class="text-xs font-medium theme-text-muted">Billing Month (template <code
+                                class="text-[10px]">{{month}}</code>)</label>
+                        <input type="text" id="reminderMonth" placeholder="September 2026"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-xs font-medium theme-text-muted">Due Date (template <code class="text-[10px]">{{due_date}}</code>)</label>
-                        <input type="date" id="reminderDueDate" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                        <label class="text-xs font-medium theme-text-muted">Due Date (template <code
+                                class="text-[10px]">{{due_date}}</code>)</label>
+                        <input type="date" id="reminderDueDate"
+                            class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                     </div>
                 </div>
                 <p class="text-[11px] theme-text-subtle flex items-start gap-1.5">
                     <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
-                    The email body lives in your EmailJS template. Here you only pick who to send to and the month / due date. <code class="text-[10px]">{{amount}}</code> is each tenant's outstanding rent.
+                    The email body lives in your EmailJS template. Here you only pick who to send to and the month / due
+                    date. <code class="text-[10px]">{{amount}}</code> is each tenant's outstanding rent.
                 </p>
 
                 <!-- Recipient list -->
                 <div class="border theme-table-row rounded-xl overflow-hidden">
-                    <div class="flex items-center justify-between px-4 py-2.5 theme-table-head border-b theme-table-row text-xs font-semibold theme-text-muted uppercase tracking-wider">
+                    <div
+                        class="flex items-center justify-between px-4 py-2.5 theme-table-head border-b theme-table-row text-xs font-semibold theme-text-muted uppercase tracking-wider">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" id="reminderSelectAll" class="accent-indigo-600"> Recipient
                         </label>
@@ -553,11 +736,14 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 px-5 sm:px-6 py-4 border-t theme-table-row shrink-0">
+            <div
+                class="flex flex-col sm:flex-row justify-between items-center gap-3 px-5 sm:px-6 py-4 border-t theme-table-row shrink-0">
                 <span id="reminderStatus" class="text-xs theme-text-muted"></span>
                 <div class="flex gap-3">
-                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Close</button>
-                    <button type="button" id="reminderSendBtn" class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg border border-emerald-500 shadow-md transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <button type="button" onclick="closeReminderModal()"
+                        class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Close</button>
+                    <button type="button" id="reminderSendBtn"
+                        class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg border border-emerald-500 shadow-md transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
                         <i data-lucide="send" class="w-4 h-4"></i> <span id="reminderSendLabel">Send Selected</span>
                     </button>
                 </div>
@@ -566,21 +752,144 @@
     </div>
 
     <!-- Payment History Modal -->
-    <div id="historyModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeHistoryModal()"></div>
-        <div class="modal-content relative w-full max-w-lg theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+    <div id="historyModal"
+        class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeHistoryModal()">
+        </div>
+        <div
+            class="modal-content relative w-full max-w-lg theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
                 <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2">
-                    <i data-lucide="history" class="w-5 h-5 text-indigo-500"></i> <span id="historyTitle">Payment History</span>
+                    <i data-lucide="history" class="w-5 h-5 text-indigo-500"></i> <span id="historyTitle">Payment
+                        History</span>
                 </h3>
-                <button onclick="closeHistoryModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                <div class="flex items-center gap-2">
+                    <button onclick="openPastPaymentModal()"
+                        class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border border-indigo-500 shadow transition-all active:scale-95"
+                        title="Log a past/historical payment">
+                        <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+                        <span>Log Past Payment</span>
+                    </button>
+                    <button onclick="closeHistoryModal()"
+                        class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div
+                class="px-5 sm:px-6 py-3 border-b theme-table-row text-xs theme-text-muted flex items-center justify-between shrink-0">
+                <span id="historySummary"></span>
+                <span id="historyOldBadge"
+                    class="hidden text-[10px] px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-500 border border-violet-500/20 font-semibold">Includes
+                    historical entries</span>
+            </div>
+            <div id="historyList" class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-2 text-sm"></div>
+        </div>
+    </div>
+
+    <!-- Log Past Payment Modal -->
+    <div id="pastPaymentModal"
+        class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"
+            onclick="closePastPaymentModal()"></div>
+        <div
+            class="modal-content relative w-full max-w-md theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head">
+                <h3 class="text-base font-semibold theme-text-primary flex items-center gap-2">
+                    <i data-lucide="clock-3" class="w-5 h-5 text-violet-500"></i> Log Historical Payment
+                </h3>
+                <button onclick="closePastPaymentModal()"
+                    class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="px-5 sm:px-6 py-3 border-b theme-table-row text-xs theme-text-muted flex items-center justify-between shrink-0">
-                <span id="historySummary"></span>
+
+            <!-- Info Banner -->
+            <div
+                class="mx-5 mt-4 px-3.5 py-2.5 rounded-lg bg-violet-500/10 border border-violet-500/20 text-[11px] text-violet-600 dark:text-violet-400 flex items-start gap-2">
+                <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                <span>Use this to record rent or electricity payments that were collected <strong>before</strong> you
+                    started using RentPulse. These will appear in the history section with a <em>Historical</em>
+                    tag.</span>
             </div>
-            <div id="historyList" class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-2 text-sm"></div>
+
+            <!-- Form -->
+            <form id="pastPaymentForm" class="p-5 space-y-4">
+                <!-- Month / Period -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Billing Month *</label>
+                    <input type="month" id="ppMonth" required
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition-all">
+                    <p class="text-[10px] theme-text-subtle">Select the month this payment was for (e.g. August 2026).
+                    </p>
+                </div>
+
+                <!-- Payment Type -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Payment Type *</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label
+                            class="flex items-center gap-2 p-3 rounded-lg border theme-table-row cursor-pointer hover:border-emerald-500/40 transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-500/10">
+                            <input type="radio" name="ppType" value="rent" id="ppTypeRent" checked
+                                class="accent-emerald-600">
+                            <span class="text-xs font-medium theme-text-primary flex items-center gap-1.5"><i
+                                    data-lucide="indian-rupee" class="w-3.5 h-3.5 text-emerald-500"></i> Rent</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-2 p-3 rounded-lg border theme-table-row cursor-pointer hover:border-amber-500/40 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-500/10">
+                            <input type="radio" name="ppType" value="electricity" id="ppTypeElec"
+                                class="accent-amber-600">
+                            <span class="text-xs font-medium theme-text-primary flex items-center gap-1.5"><i
+                                    data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> Electricity</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Rent Amount (shown for rent type) -->
+                <div id="ppRentFields" class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Amount Paid (₹) *</label>
+                    <input type="number" id="ppAmount" min="0" placeholder="e.g. 12000"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition-all">
+                </div>
+
+                <!-- Electricity Units (shown for elec type) -->
+                <div id="ppElecFields" class="space-y-1.5 hidden">
+                    <label class="text-xs font-medium theme-text-muted">Units Consumed (kWh) *</label>
+                    <input type="number" id="ppUnits" min="0" placeholder="e.g. 120"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition-all">
+                </div>
+
+                <!-- Date Paid -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Date Paid</label>
+                    <input type="date" id="ppDate"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition-all">
+                    <p class="text-[10px] theme-text-subtle">Leave blank to use today's date.</p>
+                </div>
+
+                <!-- Note -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium theme-text-muted">Note <span
+                            class="font-normal theme-text-subtle">(optional)</span></label>
+                    <input type="text" id="ppNote" placeholder="e.g. Collected in cash" maxlength="100"
+                        class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition-all">
+                </div>
+
+                <p id="ppError"
+                    class="text-xs font-medium text-rose-500 hidden bg-rose-500/10 py-2 px-3 rounded-lg border border-rose-500/20">
+                </p>
+
+                <!-- Footer -->
+                <div class="flex justify-end gap-3 pt-2 border-t theme-table-row">
+                    <button type="button" onclick="closePastPaymentModal()"
+                        class="px-4 py-2.5 text-xs font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-xs font-medium text-white bg-violet-600 hover:bg-violet-500 rounded-lg border border-violet-500 shadow-md transition-all flex items-center gap-1.5">
+                        <i data-lucide="save" class="w-3.5 h-3.5"></i> Save Historical Entry
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -898,41 +1207,157 @@
 
         // ===== Payment history modal ==============================
         const historyModal = document.getElementById('historyModal');
+        let _historyTenantId = null; // tracks which tenant the history modal is open for
+
         window.openHistoryModal = (id) => {
+            _historyTenantId = id;
+            refreshHistoryModal();
+            historyModal.classList.add('active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        function refreshHistoryModal() {
+            const id = _historyTenantId;
+            if (!id) return;
             const t = tenants.find(x => x.id === id);
             if (!t) return;
             document.getElementById('historyTitle').textContent = `${t.name} — Payment History`;
-            const pays = Array.isArray(t.payments) ? [...t.payments].sort((a, b) => (b.ts || '').localeCompare(a.ts || '')) : [];
+            const pays = Array.isArray(t.payments)
+                ? [...t.payments].sort((a, b) => (b.ts || '').localeCompare(a.ts || ''))
+                : [];
             const totalRent = pays.filter(p => p.kind === 'rent').reduce((s, p) => s + (p.amount || 0), 0);
+            const hasHistorical = pays.some(p => p.historical);
+
             document.getElementById('historySummary').innerHTML =
                 `<span>${pays.length} payment${pays.length === 1 ? '' : 's'} recorded</span> &nbsp;•&nbsp; <span>Rent collected: <strong class="theme-text-primary font-mono">₹${totalRent.toLocaleString('en-IN')}</strong></span>`;
+
+            // Show/hide "Includes historical entries" badge
+            const badge = document.getElementById('historyOldBadge');
+            if (badge) badge.classList.toggle('hidden', !hasHistorical);
+
             const listEl = document.getElementById('historyList');
             if (pays.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-10 text-xs theme-text-subtle">No payments recorded yet. Payments are logged automatically when you mark rent or electricity as Paid.</div>`;
+                listEl.innerHTML = `<div class="text-center py-10 text-xs theme-text-subtle">No payments recorded yet. Use <strong>Log Past Payment</strong> to add old data, or mark rent/electricity as Paid to auto-log.</div>`;
             } else {
                 listEl.innerHTML = pays.map(p => {
                     const d = p.ts ? new Date(p.ts) : null;
                     const when = d ? d.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
                     const isRent = p.kind === 'rent';
                     const amount = isRent ? `₹${(p.amount || 0).toLocaleString('en-IN')}` : `${p.units || 0} kWh`;
+                    const historicalTag = p.historical
+                        ? `<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-violet-500/15 text-violet-500 border border-violet-500/25 font-semibold ml-1">Historical</span>`
+                        : '';
+                    const deleteBtn = p.historical
+                        ? `<button onclick="deleteHistoricalPayment('${id}','${p.ts}')" class="p-1 rounded theme-action-btn border hover:bg-rose-500/20 text-rose-500 transition-colors" title="Delete this historical entry"><i data-lucide="trash-2" class="w-3 h-3"></i></button>`
+                        : '';
                     return `
-                    <div class="flex items-center justify-between gap-3 p-3 rounded-lg border theme-table-row theme-table-head">
-                        <div class="min-w-0">
-                            <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-lg border theme-table-row theme-table-head ${p.historical ? 'border-violet-500/20' : ''}">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
                                 <i data-lucide="${isRent ? 'indian-rupee' : 'zap'}" class="w-3.5 h-3.5 ${isRent ? 'text-emerald-500' : 'text-amber-500'}"></i>
                                 <span class="font-medium theme-text-primary capitalize">${p.kind}</span>
                                 <span class="text-[10px] px-1.5 py-0.5 rounded theme-action-btn border theme-text-muted">${p.period || ''}</span>
+                                ${historicalTag}
                             </div>
                             <div class="text-[11px] theme-text-subtle mt-0.5">${p.note || ''} · ${when}</div>
                         </div>
-                        <span class="font-mono font-semibold ${isRent ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'} shrink-0">${amount}</span>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="font-mono font-semibold ${isRent ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}">${amount}</span>
+                            ${deleteBtn}
+                        </div>
                     </div>`;
                 }).join('');
             }
-            historyModal.classList.add('active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.closeHistoryModal = () => {
+            historyModal.classList.remove('active');
+            _historyTenantId = null;
+        };
+
+        // ===== Delete a historical payment entry ==================
+        window.deleteHistoricalPayment = async (tenantId, ts) => {
+            if (!confirm('Remove this historical payment entry?')) return;
+            const t = tenants.find(x => x.id === tenantId);
+            if (!t || !Array.isArray(t.payments)) return;
+            t.payments = t.payments.filter(p => !(p.historical && p.ts === ts));
+            await saveFirebaseData();
+            refreshHistoryModal();
+            toast('Historical entry removed.', 'info');
+        };
+
+        // ===== Past Payment Modal ==================================
+        const pastPaymentModal = document.getElementById('pastPaymentModal');
+        const pastPaymentForm = document.getElementById('pastPaymentForm');
+
+        window.openPastPaymentModal = () => {
+            if (!_historyTenantId) return;
+            pastPaymentForm.reset();
+            // Default: today's date
+            document.getElementById('ppDate').value = new Date().toISOString().split('T')[0];
+            // Default month: previous month
+            const now = new Date();
+            const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            document.getElementById('ppMonth').value = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
+            document.getElementById('ppRentFields').classList.remove('hidden');
+            document.getElementById('ppElecFields').classList.add('hidden');
+            document.getElementById('ppError').classList.add('hidden');
+            pastPaymentModal.classList.add('active');
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
-        window.closeHistoryModal = () => historyModal.classList.remove('active');
+
+        window.closePastPaymentModal = () => {
+            pastPaymentModal.classList.remove('active');
+        };
+
+        // Toggle Rent / Electricity fields
+        document.querySelectorAll('input[name="ppType"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const isRent = document.getElementById('ppTypeRent').checked;
+                document.getElementById('ppRentFields').classList.toggle('hidden', !isRent);
+                document.getElementById('ppElecFields').classList.toggle('hidden', isRent);
+            });
+        });
+
+        // Submit historical payment
+        pastPaymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('ppError');
+            errEl.classList.add('hidden');
+
+            const tenantId = _historyTenantId;
+            const t = tenants.find(x => x.id === tenantId);
+            if (!t) { errEl.textContent = 'Tenant not found.'; errEl.classList.remove('hidden'); return; }
+
+            const monthVal = document.getElementById('ppMonth').value;
+            if (!monthVal) { errEl.textContent = 'Please select a billing month.'; errEl.classList.remove('hidden'); return; }
+
+            const isRent = document.getElementById('ppTypeRent').checked;
+            const dateVal = document.getElementById('ppDate').value || new Date().toISOString().split('T')[0];
+            const noteVal = document.getElementById('ppNote').value.trim();
+            // Build a unique timestamp using the selected date at noon
+            const ts = new Date(`${dateVal}T12:00:00`).toISOString();
+
+            let entry;
+            if (isRent) {
+                const amount = parseFloat(document.getElementById('ppAmount').value);
+                if (!amount || amount <= 0) { errEl.textContent = 'Enter a valid amount greater than ₹0.'; errEl.classList.remove('hidden'); return; }
+                entry = { ts, period: monthVal, kind: 'rent', amount, status: 'Paid', note: noteVal || 'Historical entry', historical: true };
+            } else {
+                const units = parseFloat(document.getElementById('ppUnits').value);
+                if (isNaN(units) || units < 0) { errEl.textContent = 'Enter a valid unit value (0 or more).'; errEl.classList.remove('hidden'); return; }
+                entry = { ts, period: monthVal, kind: 'electricity', units, status: 'Paid', note: noteVal || 'Historical entry', historical: true };
+            }
+
+            if (!Array.isArray(t.payments)) t.payments = [];
+            t.payments.push(entry);
+
+            await saveFirebaseData();
+            closePastPaymentModal();
+            refreshHistoryModal();
+            toast(`Historical ${isRent ? 'rent' : 'electricity'} payment logged for ${monthVal}.`, 'success');
+        });
 
         async function saveFirebaseData() {
             if (!currentUser) return;
@@ -983,7 +1408,7 @@
 
         // Theme Switcher Logic
         const THEME_KEY = 'rentpulse_theme_mode';
-        let isDarkMode = localStorage.getItem(THEME_KEY) !== 'light'; 
+        let isDarkMode = localStorage.getItem(THEME_KEY) !== 'light';
 
         function applyTheme() {
             const htmlRoot = document.getElementById('htmlRoot');
@@ -992,7 +1417,7 @@
 
             if (isDarkMode) {
                 htmlRoot.classList.add('dark');
-                if(icon) {
+                if (icon) {
                     icon.setAttribute('data-lucide', 'sun');
                     icon.setAttribute("class", "w-4 h-4 text-amber-400");
                     if (label) label.innerText = "Light Mode";
@@ -1000,7 +1425,7 @@
                 localStorage.setItem(THEME_KEY, 'dark');
             } else {
                 htmlRoot.classList.remove('dark');
-                if(icon) {
+                if (icon) {
                     icon.setAttribute('data-lucide', 'moon');
                     icon.setAttribute("class", "w-4 h-4 text-indigo-600");
                     if (label) label.innerText = "Dark Mode";
@@ -1091,9 +1516,9 @@
             const filterElec = document.getElementById('filterElec').value;
 
             const filtered = tenants.filter(t => {
-                const matchesSearch = t.name.toLowerCase().includes(searchQ) || 
-                                      t.unit.toLowerCase().includes(searchQ) ||
-                                      t.contact.includes(searchQ);
+                const matchesSearch = t.name.toLowerCase().includes(searchQ) ||
+                    t.unit.toLowerCase().includes(searchQ) ||
+                    t.contact.includes(searchQ);
                 const matchesRent = filterRent === 'All' || t.rentStatus === filterRent;
                 const matchesElec = filterElec === 'All' || t.elecStatus === filterElec;
                 return matchesSearch && matchesRent && matchesElec;
@@ -1116,7 +1541,7 @@
                 const consumed = t.curr - t.prev;
                 const formattedDate = formatDateReadable(t.date);
                 const pRent = t.partialRent || 0;
-                
+
                 return `
                 <tr class="theme-table-row transition-colors group">
                     <td class="px-5 py-3.5">
@@ -1237,7 +1662,7 @@
 
         function updateKPIs(data) {
             document.getElementById('kpi-tenants').innerText = data.length;
-            
+
             let rentCol = 0;
             let rentPen = 0;
             let totalUnits = 0;
@@ -1252,7 +1677,7 @@
                     rentCol += paidPart;
                     rentPen += Math.max(0, t.rent - paidPart);
                 }
-                
+
                 totalUnits += (t.curr - t.prev);
             });
 
@@ -1261,7 +1686,7 @@
             document.getElementById('kpi-units').innerText = totalUnits.toLocaleString('en-IN');
         }
 
-        window.openModal = function(id = null) {
+        window.openModal = function (id = null) {
             const modalEl = document.getElementById('tenantModal');
             const formEl = document.getElementById('tenantForm');
 
@@ -1312,16 +1737,16 @@
             modalEl.classList.add('active');
         };
 
-        window.closeModal = function() {
+        window.closeModal = function () {
             const modalEl = document.getElementById('tenantModal');
             if (modalEl) {
                 modalEl.classList.remove('active');
             }
         };
 
-                form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const rentStatusVal = document.getElementById('formRentStatus').value;
             const partialVal = parseFloat(document.getElementById('formPartialRent').value) || 0;
 
@@ -1341,7 +1766,7 @@
             };
 
             const fId = document.getElementById('formId').value;
-            
+
             if (fId) {
                 const idx = tenants.findIndex(t => t.id === fId);
                 if (idx > -1) {
@@ -1365,9 +1790,9 @@
         });
 
         window.editTenant = (id) => window.openModal(id);
-        
+
         window.deleteTenant = async (id) => {
-            if(confirm('Are you sure you want to remove this tenant record?')) {
+            if (confirm('Are you sure you want to remove this tenant record?')) {
                 tenants = tenants.filter(t => t.id !== id);
                 await saveFirebaseData();
                 renderTable();
@@ -1534,7 +1959,7 @@
 
         window.exportCSV = () => {
             if (tenants.length === 0) return alert('No data to export.');
-            
+
             const headers = ['Date Joined', 'Tenant Name', 'Contact Number', 'Email', 'Unit Type', 'Base Rent (INR)', 'Rent Status', 'Partial Rent Paid (INR)', 'Rent Due (INR)', 'Initial Reading', 'Prev Reading', 'Curr Reading', 'Consumed Units', 'Elec Payment Status'];
 
             const rows = tenants.map(t => [
@@ -1558,7 +1983,7 @@
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            
+
             const link = document.createElement("a");
             link.setAttribute("href", url);
             link.setAttribute("download", `RentPulse_Export_${new Date().toISOString().split('T')[0]}.csv`);
@@ -1571,80 +1996,81 @@
 
     <!-- Standalone button handlers: these do not depend on the Firebase module loading. -->
     <script>
-    (function () {
-        function openTenantModalFallback() {
-            const modal = document.getElementById('tenantModal');
-            const form = document.getElementById('tenantForm');
-            if (!modal) return;
-            if (typeof window.openModal === 'function') {
-                window.openModal();
-                return;
-            }
-            if (form) form.reset();
-            const title = document.getElementById('modalTitle');
-            const id = document.getElementById('formId');
-            const date = document.getElementById('formDate');
-            const rentStatus = document.getElementById('formRentStatus');
-            const elecStatus = document.getElementById('formElecStatus');
-            const partial = document.getElementById('partialAmountContainer');
-            if (title) title.textContent = 'Add New Tenant';
-            if (id) id.value = '';
-            if (date) date.value = new Date().toISOString().split('T')[0];
-            if (rentStatus) rentStatus.value = 'Paid';
-            if (elecStatus) elecStatus.value = 'Paid';
-            if (partial) partial.classList.add('hidden');
-            modal.classList.add('active');
-        }
-
-        function exportCsvFallback() {
-            if (typeof window.exportCSV === 'function') {
-                window.exportCSV();
-                return;
-            }
-            const rows = Array.from(document.querySelectorAll('#desktopTableBody tr'));
-            if (!rows.length) {
-                alert('No data to export.');
-                return;
-            }
-            const headers = ['Tenant Name','Contact Number','Unit Type','Base Rent','Rent Status','Prev Reading','Curr Reading','Consumed Units','Electricity Status'];
-            const data = rows.map(tr => {
-                const cells = Array.from(tr.querySelectorAll('td'));
-                const text = i => cells[i] ? cells[i].innerText.replace(/\s+/g,' ').trim() : '';
-                const readings = text(4).match(/([0-9.]+)\s*→\s*([0-9.]+)/);
-                const consumed = text(5).replace(/[^0-9.-]/g,'');
-                return [text(0), text(0), text(1), text(2), text(3), readings ? readings[1] : '', readings ? readings[2] : '', consumed, text(6)];
-            });
-            const esc = v => '"' + String(v).replace(/"/g,'""') + '"';
-            const csv = '\uFEFF' + [headers, ...data].map(r => r.map(esc).join(',')).join('\r\n');
-            const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'RentPulse_Export_' + new Date().toISOString().split('T')[0] + '.csv';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-        }
-
-        function bindStandaloneButtons() {
-            const add = document.getElementById('addTenantBtn');
-            const exp = document.getElementById('exportCsvBtn');
-
-            if (add && !add.dataset.rentpulseBound) {
-                add.dataset.rentpulseBound = '1';
-                add.addEventListener('click', openTenantModalFallback);
+        (function () {
+            function openTenantModalFallback() {
+                const modal = document.getElementById('tenantModal');
+                const form = document.getElementById('tenantForm');
+                if (!modal) return;
+                if (typeof window.openModal === 'function') {
+                    window.openModal();
+                    return;
+                }
+                if (form) form.reset();
+                const title = document.getElementById('modalTitle');
+                const id = document.getElementById('formId');
+                const date = document.getElementById('formDate');
+                const rentStatus = document.getElementById('formRentStatus');
+                const elecStatus = document.getElementById('formElecStatus');
+                const partial = document.getElementById('partialAmountContainer');
+                if (title) title.textContent = 'Add New Tenant';
+                if (id) id.value = '';
+                if (date) date.value = new Date().toISOString().split('T')[0];
+                if (rentStatus) rentStatus.value = 'Paid';
+                if (elecStatus) elecStatus.value = 'Paid';
+                if (partial) partial.classList.add('hidden');
+                modal.classList.add('active');
             }
 
-            if (exp && !exp.dataset.rentpulseBound) {
-                exp.dataset.rentpulseBound = '1';
-                exp.addEventListener('click', exportCsvFallback);
+            function exportCsvFallback() {
+                if (typeof window.exportCSV === 'function') {
+                    window.exportCSV();
+                    return;
+                }
+                const rows = Array.from(document.querySelectorAll('#desktopTableBody tr'));
+                if (!rows.length) {
+                    alert('No data to export.');
+                    return;
+                }
+                const headers = ['Tenant Name', 'Contact Number', 'Unit Type', 'Base Rent', 'Rent Status', 'Prev Reading', 'Curr Reading', 'Consumed Units', 'Electricity Status'];
+                const data = rows.map(tr => {
+                    const cells = Array.from(tr.querySelectorAll('td'));
+                    const text = i => cells[i] ? cells[i].innerText.replace(/\s+/g, ' ').trim() : '';
+                    const readings = text(4).match(/([0-9.]+)\s*→\s*([0-9.]+)/);
+                    const consumed = text(5).replace(/[^0-9.-]/g, '');
+                    return [text(0), text(0), text(1), text(2), text(3), readings ? readings[1] : '', readings ? readings[2] : '', consumed, text(6)];
+                });
+                const esc = v => '"' + String(v).replace(/"/g, '""') + '"';
+                const csv = '\uFEFF' + [headers, ...data].map(r => r.map(esc).join(',')).join('\r\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'RentPulse_Export_' + new Date().toISOString().split('T')[0] + '.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
             }
-        }
 
-        bindStandaloneButtons();
-        document.addEventListener('DOMContentLoaded', bindStandaloneButtons);
-    })();
+            function bindStandaloneButtons() {
+                const add = document.getElementById('addTenantBtn');
+                const exp = document.getElementById('exportCsvBtn');
+
+                if (add && !add.dataset.rentpulseBound) {
+                    add.dataset.rentpulseBound = '1';
+                    add.addEventListener('click', openTenantModalFallback);
+                }
+
+                if (exp && !exp.dataset.rentpulseBound) {
+                    exp.dataset.rentpulseBound = '1';
+                    exp.addEventListener('click', exportCsvFallback);
+                }
+            }
+
+            bindStandaloneButtons();
+            document.addEventListener('DOMContentLoaded', bindStandaloneButtons);
+        })();
     </script>
 </body>
+
 </html>
