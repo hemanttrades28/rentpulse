@@ -142,8 +142,8 @@
         ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
 
         /* Modal Smooth Animations */
-        .modal-overlay { opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-overlay { opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; pointer-events: none; }
+        .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { transform: translateY(15px) scale(0.97); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 
@@ -213,13 +213,13 @@
                 <span class="hidden sm:inline">Logout</span>
             </button>
 
-            <button onclick="exportCSV()" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm">
+            <button type="button" id="exportCsvBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm">
                 <i data-lucide="download" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
                 <span class="hidden sm:inline">Export CSV</span>
                 <span class="sm:hidden">Export</span>
             </button>
 
-            <button onclick="openModal()" class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg border border-indigo-500 transition-all shadow-md text-xs sm:text-sm font-medium active:scale-95">
+            <button type="button" id="addTenantBtn" class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg border border-indigo-500 transition-all shadow-md text-xs sm:text-sm font-medium active:scale-95">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>Add Tenant</span>
             </button>
@@ -486,7 +486,11 @@
         const db = getFirestore(app);
 
         // Init Lucide icons
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        } else {
+            console.warn("Lucide icons not loaded.");
+        }
 
         let tenants = [];
         let currentUser = null;
@@ -515,22 +519,8 @@
                     authError.innerText = regErr.message.replace('Firebase: ', '');
                     authError.classList.remove('hidden');
                     btn.innerHTML = `<span>Continue to Dashboard</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                    lucide.createIcons();
+                    if (typeof lucide !== "undefined") lucide.createIcons();
                 }
-            }
-        });
-
-        // Listen for Login/Logout state changes globally
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                authOverlay.classList.add('hidden');
-                await loadFirebaseData();
-            } else {
-                currentUser = null;
-                authOverlay.classList.remove('hidden');
-                tenants = [];
-                renderTable();
             }
         });
 
@@ -542,21 +532,18 @@
         async function loadFirebaseData() {
             if (!currentUser) return;
             try {
-                const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+                const docRef = doc(db, 'users', currentUser.uid);
+                const docSnap = await getDoc(docRef);
+
                 if (docSnap.exists()) {
                     tenants = docSnap.data().tenants || [];
                 } else {
-                    // Populate default template for new users
-                    tenants = [
-                        { id: generateId(), name: "Ramesh Kumar", contact: "9876543210", date: "2023-01-15", unit: "2BHK", rent: 15000, rentStatus: "Paid", partialRent: 0, initial: 100, prev: 1250, curr: 1375, elecStatus: "Pending" },
-                        { id: generateId(), name: "Priya Sharma", contact: "9123456780", date: "2023-05-01", unit: "1RK", rent: 8000, rentStatus: "Pending", partialRent: 0, initial: 50, prev: 400, curr: 460, elecStatus: "Paid" },
-                        { id: generateId(), name: "Amit Patel", contact: "9988776655", date: "2022-11-10", unit: "3RK", rent: 22000, rentStatus: "Partial", partialRent: 10000, initial: 200, prev: 2100, curr: 2250, elecStatus: "Pending" }
-                    ];
-                    await saveFirebaseData();
+                    // Fix: Start completely empty instead of injecting random dummy data
+                    tenants = []; 
                 }
                 renderTable();
-            } catch (e) {
-                console.error("Error fetching data:", e);
+            } catch (error) {
+                console.error("Error loading Firebase data:", error);
             }
         }
 
@@ -582,20 +569,24 @@
                 htmlRoot.classList.add('dark');
                 if(icon) {
                     icon.setAttribute('data-lucide', 'sun');
-                    icon.className = "w-4 h-4 text-amber-400";
-                    label.innerText = "Light Mode";
+                    icon.setAttribute("class", "w-4 h-4 text-amber-400");
+                    if (label) label.innerText = "Light Mode";
                 }
                 localStorage.setItem(THEME_KEY, 'dark');
             } else {
                 htmlRoot.classList.remove('dark');
                 if(icon) {
                     icon.setAttribute('data-lucide', 'moon');
-                    icon.className = "w-4 h-4 text-indigo-600";
-                    label.innerText = "Dark Mode";
+                    icon.setAttribute("class", "w-4 h-4 text-indigo-600");
+                    if (label) label.innerText = "Dark Mode";
                 }
                 localStorage.setItem(THEME_KEY, 'light');
             }
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                console.warn("Lucide icons not loaded.");
+            }
         }
 
         window.toggleTheme = () => {
@@ -616,7 +607,6 @@
         const rentStatusSelect = document.getElementById('formRentStatus');
         const partialContainer = document.getElementById('partialAmountContainer');
         const partialRentInput = document.getElementById('formPartialRent');
-
         function togglePartialInput() {
             if (rentStatusSelect.value === 'Partial') {
                 partialContainer.classList.remove('hidden');
@@ -793,7 +783,11 @@
                 `;
             }).join('');
 
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                console.warn("Lucide icons not loaded.");
+            }
         }
 
         function updateKPIs(data) {
@@ -822,42 +816,64 @@
             document.getElementById('kpi-units').innerText = totalUnits.toLocaleString('en-IN');
         }
 
-        window.openModal = (id = null) => {
-            form.reset();
-            consInput.value = '';
-            
-            if (id) {
-                document.getElementById('modalTitle').innerText = 'Edit Tenant Record';
-                const t = tenants.find(x => x.id === id);
-                if(t) {
-                    document.getElementById('formId').value = t.id;
-                    document.getElementById('formName').value = t.name;
-                    document.getElementById('formContact').value = t.contact;
-                    document.getElementById('formDate').value = t.date;
-                    document.getElementById('formUnit').value = t.unit;
-                    document.getElementById('formRent').value = t.rent;
-                    document.getElementById('formRentStatus').value = t.rentStatus;
-                    document.getElementById('formPartialRent').value = t.partialRent || '';
-                    document.getElementById('formInitial').value = t.initial;
-                    document.getElementById('formPrev').value = t.prev;
-                    document.getElementById('formCurr').value = t.curr;
-                    document.getElementById('formElecStatus').value = t.elecStatus;
-                    calculateUnits();
+        window.openModal = function(id = null) {
+            const modalEl = document.getElementById('tenantModal');
+            const formEl = document.getElementById('tenantForm');
+
+            if (!modalEl || !formEl) {
+                console.error('Tenant modal or form not found.');
+                return;
+            }
+
+            formEl.reset();
+            document.getElementById('formConsumed').value = '';
+
+            if (id !== null) {
+                const tenant = tenants.find(t => t.id === id);
+
+                if (!tenant) {
+                    console.error('Tenant not found:', id);
+                    return;
                 }
+
+                document.getElementById('modalTitle').innerText = 'Edit Tenant Record';
+                document.getElementById('formId').value = tenant.id || '';
+                document.getElementById('formName').value = tenant.name || '';
+                document.getElementById('formContact').value = tenant.contact || '';
+                document.getElementById('formDate').value = tenant.date || '';
+                document.getElementById('formUnit').value = tenant.unit || '';
+                document.getElementById('formRent').value = tenant.rent ?? '';
+                document.getElementById('formRentStatus').value = tenant.rentStatus || 'Pending';
+                document.getElementById('formPartialRent').value = tenant.partialRent ?? '';
+                document.getElementById('formInitial').value = tenant.initial ?? '';
+                document.getElementById('formPrev').value = tenant.prev ?? '';
+                document.getElementById('formCurr').value = tenant.curr ?? '';
+                document.getElementById('formElecStatus').value = tenant.elecStatus || 'Pending';
+
+                calculateUnits();
             } else {
                 document.getElementById('modalTitle').innerText = 'Add New Tenant';
                 document.getElementById('formId').value = '';
                 document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('formRentStatus').value = 'Paid';
+                document.getElementById('formElecStatus').value = 'Paid';
+                document.getElementById('partialAmountContainer').classList.add('hidden');
+                document.getElementById('formPartialRent').removeAttribute('required');
             }
+
             togglePartialInput();
-            modal.classList.add('active');
+
+            modalEl.classList.add('active');
         };
 
-        window.closeModal = () => {
-            modal.classList.remove('active');
+        window.closeModal = function() {
+            const modalEl = document.getElementById('tenantModal');
+            if (modalEl) {
+                modalEl.classList.remove('active');
+            }
         };
 
-        form.addEventListener('submit', async (e) => {
+                form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const rentStatusVal = document.getElementById('formRentStatus').value;
@@ -905,6 +921,25 @@
         document.getElementById('filterRent').addEventListener('change', renderTable);
         document.getElementById('filterElec').addEventListener('change', renderTable);
 
+        // Auth listener is registered only after all DOM references are initialized.
+        // This prevents the "Cannot access 'emptyState' before initialization" error.
+        onAuthStateChanged(auth, async (user) => {
+            try {
+                if (user) {
+                    currentUser = user;
+                    authOverlay.classList.add('hidden');
+                    await loadFirebaseData();
+                } else {
+                    currentUser = null;
+                    authOverlay.classList.remove('hidden');
+                    tenants = [];
+                    renderTable();
+                }
+            } catch (error) {
+                console.error("Auth state initialization error:", error);
+            }
+        });
+
         window.exportCSV = () => {
             if (tenants.length === 0) return alert('No data to export.');
             
@@ -938,6 +973,84 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         };
+    </script>
+
+    <!-- Standalone button handlers: these do not depend on the Firebase module loading. -->
+    <script>
+    (function () {
+        function openTenantModalFallback() {
+            const modal = document.getElementById('tenantModal');
+            const form = document.getElementById('tenantForm');
+            if (!modal) return;
+            if (typeof window.openModal === 'function') {
+                window.openModal();
+                return;
+            }
+            if (form) form.reset();
+            const title = document.getElementById('modalTitle');
+            const id = document.getElementById('formId');
+            const date = document.getElementById('formDate');
+            const rentStatus = document.getElementById('formRentStatus');
+            const elecStatus = document.getElementById('formElecStatus');
+            const partial = document.getElementById('partialAmountContainer');
+            if (title) title.textContent = 'Add New Tenant';
+            if (id) id.value = '';
+            if (date) date.value = new Date().toISOString().split('T')[0];
+            if (rentStatus) rentStatus.value = 'Paid';
+            if (elecStatus) elecStatus.value = 'Paid';
+            if (partial) partial.classList.add('hidden');
+            modal.classList.add('active');
+        }
+
+        function exportCsvFallback() {
+            if (typeof window.exportCSV === 'function') {
+                window.exportCSV();
+                return;
+            }
+            const rows = Array.from(document.querySelectorAll('#desktopTableBody tr'));
+            if (!rows.length) {
+                alert('No data to export.');
+                return;
+            }
+            const headers = ['Tenant Name','Contact Number','Unit Type','Base Rent','Rent Status','Prev Reading','Curr Reading','Consumed Units','Electricity Status'];
+            const data = rows.map(tr => {
+                const cells = Array.from(tr.querySelectorAll('td'));
+                const text = i => cells[i] ? cells[i].innerText.replace(/\s+/g,' ').trim() : '';
+                const readings = text(4).match(/([0-9.]+)\s*→\s*([0-9.]+)/);
+                const consumed = text(5).replace(/[^0-9.-]/g,'');
+                return [text(0), text(0), text(1), text(2), text(3), readings ? readings[1] : '', readings ? readings[2] : '', consumed, text(6)];
+            });
+            const esc = v => '"' + String(v).replace(/"/g,'""') + '"';
+            const csv = '\uFEFF' + [headers, ...data].map(r => r.map(esc).join(',')).join('\r\n');
+            const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'RentPulse_Export_' + new Date().toISOString().split('T')[0] + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function bindStandaloneButtons() {
+            const add = document.getElementById('addTenantBtn');
+            const exp = document.getElementById('exportCsvBtn');
+
+            if (add && !add.dataset.rentpulseBound) {
+                add.dataset.rentpulseBound = '1';
+                add.addEventListener('click', openTenantModalFallback);
+            }
+
+            if (exp && !exp.dataset.rentpulseBound) {
+                exp.dataset.rentpulseBound = '1';
+                exp.addEventListener('click', exportCsvFallback);
+            }
+        }
+
+        bindStandaloneButtons();
+        document.addEventListener('DOMContentLoaded', bindStandaloneButtons);
+    })();
     </script>
 </body>
 </html>
