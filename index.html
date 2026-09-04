@@ -11,6 +11,22 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- EmailJS (browser SDK) -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+    <script>
+        // === EmailJS configuration ===================================
+        window.EMAILJS_CONFIG = {
+            publicKey: "9joB30ergVZx1wRI3",   // <-- paste EmailJS Account > General > Public Key
+            serviceId: "service_7uhssjo",
+            templateId: "template_bh70cmj"
+        };
+        try {
+            if (window.emailjs && window.EMAILJS_CONFIG.publicKey && !window.EMAILJS_CONFIG.publicKey.startsWith("YOUR_")) {
+                emailjs.init({ publicKey: window.EMAILJS_CONFIG.publicKey });
+            }
+        } catch (e) { console.warn("EmailJS init failed:", e); }
+    </script>
+
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -163,22 +179,41 @@
                 </div>
                 <h2 class="text-xl font-bold theme-text-primary tracking-tight">Rent<span class="text-indigo-600 dark:text-indigo-400">Pulse</span> Sync</h2>
             </div>
+            <!-- Mode Tabs -->
+            <div class="grid grid-cols-2 gap-1 p-1 mb-5 theme-action-btn border rounded-lg text-xs font-semibold">
+                <button type="button" id="tabSignIn" class="py-2 rounded-md bg-indigo-600 text-white transition-all">Sign In</button>
+                <button type="button" id="tabSignUp" class="py-2 rounded-md theme-text-muted transition-all">Create Account</button>
+            </div>
+
             <form id="authForm" class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium theme-text-muted">Email Address</label>
-                    <input type="email" id="authEmail" required placeholder="you@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    <input type="email" id="authEmail" required autocomplete="email" placeholder="you@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium theme-text-muted">Password</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    <div class="relative">
+                        <input type="password" id="authPassword" required minlength="6" autocomplete="current-password" placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                        <button type="button" id="togglePassword" aria-label="Show password" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 theme-text-subtle hover:theme-text-primary transition-colors">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-1.5 hidden" id="confirmPasswordContainer">
+                    <label class="text-xs font-medium theme-text-muted">Confirm Password</label>
+                    <input type="password" id="authConfirmPassword" minlength="6" autocomplete="new-password" placeholder="••••••••" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="forgotPasswordBtn" class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">Forgot password?</button>
                 </div>
                 <p id="authError" class="text-xs font-medium text-rose-500 hidden text-center bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"></p>
+                <p id="authNotice" class="text-xs font-medium text-emerald-600 dark:text-emerald-400 hidden text-center bg-emerald-500/10 py-2 rounded-lg border border-emerald-500/20"></p>
                 <button type="submit" id="authSubmitBtn" class="w-full py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <span>Continue to Dashboard</span>
+                    <span id="authSubmitLabel">Sign In to Dashboard</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
-            <p class="text-[11px] theme-text-subtle text-center mt-4">New here? We will automatically create an account for you.</p>
+            <p class="text-[11px] theme-text-subtle text-center mt-4">New accounts must verify their email address before the dashboard unlocks.</p>
         </div>
     </div>
 
@@ -211,6 +246,12 @@
             <button onclick="logoutApp()" class="flex items-center gap-1.5 px-3 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm" title="Sign Out">
                 <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
                 <span class="hidden sm:inline">Logout</span>
+            </button>
+
+            <button type="button" id="bulkReminderBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm" title="Send rent reminders">
+                <i data-lucide="mail" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+                <span class="hidden sm:inline">Send Reminders</span>
+                <span class="sm:hidden">Remind</span>
             </button>
 
             <button type="button" id="exportCsvBtn" class="flex items-center gap-1.5 px-3 sm:px-4 py-2 theme-action-btn border rounded-lg transition-all theme-text-primary text-xs sm:text-sm font-medium active:scale-95 shadow-sm">
@@ -373,6 +414,12 @@
                         <input type="tel" id="formContact" required placeholder="10-digit phone number" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
                     </div>
 
+                    <!-- Email -->
+                    <div class="space-y-1.5 sm:col-span-2">
+                        <label class="text-xs font-medium theme-text-muted">Email Address <span class="theme-text-subtle font-normal">(for rent reminders)</span></label>
+                        <input type="email" id="formEmail" placeholder="tenant@domain.com" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all">
+                    </div>
+
                     <!-- Date Joined -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-medium theme-text-muted">Date Joined *</label>
@@ -464,11 +511,87 @@
         </div>
     </div>
 
+    <!-- Rent Reminder Modal (bulk + template settings) -->
+    <div id="reminderModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeReminderModal()"></div>
+        <div class="modal-content relative w-full max-w-2xl theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
+                <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2">
+                    <i data-lucide="mail" class="w-5 h-5 text-emerald-500"></i> Send Rent Reminders
+                </h3>
+                <button onclick="closeReminderModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5">
+                <!-- Template merge fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Billing Month (template <code class="text-[10px]">{{month}}</code>)</label>
+                        <input type="text" id="reminderMonth" placeholder="September 2026" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium theme-text-muted">Due Date (template <code class="text-[10px]">{{due_date}}</code>)</label>
+                        <input type="date" id="reminderDueDate" class="w-full theme-input border rounded-lg px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    </div>
+                </div>
+                <p class="text-[11px] theme-text-subtle flex items-start gap-1.5">
+                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    The email body lives in your EmailJS template. Here you only pick who to send to and the month / due date. <code class="text-[10px]">{{amount}}</code> is each tenant's outstanding rent.
+                </p>
+
+                <!-- Recipient list -->
+                <div class="border theme-table-row rounded-xl overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-2.5 theme-table-head border-b theme-table-row text-xs font-semibold theme-text-muted uppercase tracking-wider">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="reminderSelectAll" class="accent-indigo-600"> Recipient
+                        </label>
+                        <span>Outstanding</span>
+                    </div>
+                    <div id="reminderList" class="divide-y theme-table-row max-h-64 overflow-y-auto text-sm"></div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 px-5 sm:px-6 py-4 border-t theme-table-row shrink-0">
+                <span id="reminderStatus" class="text-xs theme-text-muted"></span>
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2.5 text-xs sm:text-sm font-medium theme-text-muted theme-action-btn rounded-lg border transition-all">Close</button>
+                    <button type="button" id="reminderSendBtn" class="px-5 py-2.5 text-xs sm:text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg border border-emerald-500 shadow-md transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        <i data-lucide="send" class="w-4 h-4"></i> <span id="reminderSendLabel">Send Selected</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History Modal -->
+    <div id="historyModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity" onclick="closeHistoryModal()"></div>
+        <div class="modal-content relative w-full max-w-lg theme-card border rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between px-5 sm:px-6 py-4 border-b theme-table-head shrink-0">
+                <h3 class="text-base sm:text-lg font-semibold theme-text-primary flex items-center gap-2">
+                    <i data-lucide="history" class="w-5 h-5 text-indigo-500"></i> <span id="historyTitle">Payment History</span>
+                </h3>
+                <button onclick="closeHistoryModal()" class="p-1.5 theme-text-subtle hover:theme-text-primary theme-action-btn border rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="px-5 sm:px-6 py-3 border-b theme-table-row text-xs theme-text-muted flex items-center justify-between shrink-0">
+                <span id="historySummary"></span>
+            </div>
+            <div id="historyList" class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-2 text-sm"></div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-[110] flex flex-col gap-2 pointer-events-none"></div>
+
     <!-- Application Script with Firebase Connected -->
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         // Your Firebase config
@@ -494,35 +617,154 @@
 
         let tenants = [];
         let currentUser = null;
+        let emailSettings = { month: '', dueDate: '' };
 
         // Firebase Auth UI Logic
         const authOverlay = document.getElementById('authOverlay');
         const authForm = document.getElementById('authForm');
         const authError = document.getElementById('authError');
+        const authNotice = document.getElementById('authNotice');
+        const emailInput = document.getElementById('authEmail');
+        const passwordInput = document.getElementById('authPassword');
+        const confirmPasswordInput = document.getElementById('authConfirmPassword');
+        const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
+        const tabSignIn = document.getElementById('tabSignIn');
+        const tabSignUp = document.getElementById('tabSignUp');
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        const submitLabel = document.getElementById('authSubmitLabel');
+        const submitBtn = document.getElementById('authSubmitBtn');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+
+        let authMode = 'signin'; // 'signin' | 'signup'
+
+        // Friendly messages for Firebase auth error codes
+        function friendlyAuthError(code) {
+            const map = {
+                'auth/invalid-email': 'That email address is not valid.',
+                'auth/user-disabled': 'This account has been disabled.',
+                'auth/user-not-found': 'No account exists for this email. Create one instead.',
+                'auth/wrong-password': 'Incorrect email or password.',
+                'auth/invalid-credential': 'Incorrect email or password.',
+                'auth/invalid-login-credentials': 'Incorrect email or password.',
+                'auth/email-already-in-use': 'An account already exists for this email. Sign in instead.',
+                'auth/weak-password': 'Password must be at least 6 characters.',
+                'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+                'auth/network-request-failed': 'Network error. Check your connection and try again.'
+            };
+            return map[code] || 'Something went wrong. Please try again.';
+        }
+
+        function showAuthError(msg) {
+            authError.innerText = msg;
+            authError.classList.remove('hidden');
+            authNotice.classList.add('hidden');
+        }
+        function showAuthNotice(msg) {
+            authNotice.innerText = msg;
+            authNotice.classList.remove('hidden');
+            authError.classList.add('hidden');
+        }
+        function clearAuthMessages() {
+            authError.classList.add('hidden');
+            authNotice.classList.add('hidden');
+        }
+        function setSubmitting(isSubmitting) {
+            submitBtn.disabled = isSubmitting;
+            submitBtn.classList.toggle('opacity-60', isSubmitting);
+            submitBtn.classList.toggle('cursor-not-allowed', isSubmitting);
+            submitLabel.innerText = isSubmitting
+                ? 'Please wait…'
+                : (authMode === 'signin' ? 'Sign In to Dashboard' : 'Create Account');
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            clearAuthMessages();
+            const active = 'bg-indigo-600 text-white';
+            const inactive = 'theme-text-muted';
+            if (mode === 'signup') {
+                tabSignUp.className = 'py-2 rounded-md transition-all ' + active;
+                tabSignIn.className = 'py-2 rounded-md transition-all ' + inactive;
+                confirmPasswordContainer.classList.remove('hidden');
+                confirmPasswordInput.setAttribute('required', 'true');
+                passwordInput.setAttribute('autocomplete', 'new-password');
+                forgotPasswordBtn.parentElement.classList.add('hidden');
+            } else {
+                tabSignIn.className = 'py-2 rounded-md transition-all ' + active;
+                tabSignUp.className = 'py-2 rounded-md transition-all ' + inactive;
+                confirmPasswordContainer.classList.add('hidden');
+                confirmPasswordInput.removeAttribute('required');
+                confirmPasswordInput.value = '';
+                passwordInput.setAttribute('autocomplete', 'current-password');
+                forgotPasswordBtn.parentElement.classList.remove('hidden');
+            }
+            setSubmitting(false);
+        }
+
+        tabSignIn.addEventListener('click', () => setAuthMode('signin'));
+        tabSignUp.addEventListener('click', () => setAuthMode('signup'));
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const revealed = passwordInput.type === 'text';
+            const nextType = revealed ? 'password' : 'text';
+            passwordInput.type = nextType;
+            if (confirmPasswordInput) confirmPasswordInput.type = nextType;
+            togglePasswordBtn.setAttribute('aria-label', revealed ? 'Show password' : 'Hide password');
+            togglePasswordBtn.querySelector('i')?.setAttribute('data-lucide', revealed ? 'eye' : 'eye-off');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        forgotPasswordBtn.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            if (!email) {
+                showAuthError('Enter your email address above, then tap “Forgot password?”.');
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showAuthNotice('Password reset link sent. Check your inbox (and spam folder).');
+            } catch (err) {
+                showAuthError(friendlyAuthError(err.code));
+            }
+        });
 
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            authError.classList.add('hidden');
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const btn = document.getElementById('authSubmitBtn');
-            btn.innerHTML = `<span>Processing...</span>`;
+            clearAuthMessages();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            setSubmitting(true);
 
             try {
-                // Try logging in
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) {
-                // If login fails, try automatic registration
-                try {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                } catch (regErr) {
-                    authError.innerText = regErr.message.replace('Firebase: ', '');
-                    authError.classList.remove('hidden');
-                    btn.innerHTML = `<span>Continue to Dashboard</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                    if (typeof lucide !== "undefined") lucide.createIcons();
+                if (authMode === 'signup') {
+                    if (password !== confirmPasswordInput.value) {
+                        showAuthError('Passwords do not match.');
+                        setSubmitting(false);
+                        return;
+                    }
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(cred.user);
+                    await signOut(auth);
+                    setAuthMode('signin');
+                    showAuthNotice('Account created. We sent a verification link to ' + email + '. Verify it, then sign in.');
+                } else {
+                    // Sign in ONLY — no silent account creation.
+                    const cred = await signInWithEmailAndPassword(auth, email, password);
+                    if (!cred.user.emailVerified) {
+                        await sendEmailVerification(cred.user);
+                        await signOut(auth);
+                        showAuthError('Please verify your email first. We just sent a new verification link to ' + email + '.');
+                    }
+                    // Verified users are taken to the dashboard by onAuthStateChanged.
                 }
+            } catch (err) {
+                showAuthError(friendlyAuthError(err.code));
+            } finally {
+                setSubmitting(false);
             }
         });
+
+        setAuthMode('signin');
 
         window.logoutApp = () => {
             signOut(auth);
@@ -556,24 +798,187 @@
                         tenants = cleanedTenants;
                         await setDoc(docRef, { tenants }, { merge: true });
                     }
+                    const es = docSnap.data().emailSettings;
+                    if (es && typeof es === 'object') {
+                        emailSettings = { month: es.month || '', dueDate: es.dueDate || '' };
+                    }
                 } else {
                     // New Firebase user: start completely empty.
                     tenants = [];
                 }
 
+                await applyBillingCycles();
                 renderTable();
             } catch (error) {
                 console.error("Error loading Firebase data:", error);
             }
         }
 
+        // ===== Automatic monthly billing cycle ======================
+        // Each tenant's billing day = the day-of-month from their Join date
+        // (clamped to 28 so every month has it). When a new cycle begins,
+        // rent + electricity flip to Pending automatically.
+        function billingDayOf(t) {
+            const parts = String(t.date || '').split('-');
+            const day = parseInt(parts[2], 10) || 1;
+            return Math.min(Math.max(day, 1), 28);
+        }
+        function currentBillingPeriod(t) {
+            const now = new Date();
+            let y = now.getFullYear();
+            let m = now.getMonth();
+            if (now.getDate() < billingDayOf(t)) {   // billing day this month not reached yet
+                m -= 1;
+                if (m < 0) { m = 11; y -= 1; }
+            }
+            return `${y}-${String(m + 1).padStart(2, '0')}`;
+        }
+        async function applyBillingCycles() {
+            let changed = false;
+            const flipped = [];
+            tenants.forEach(t => {
+                const period = currentBillingPeriod(t);
+                if (t.lastBilledPeriod !== period) {
+                    t.lastBilledPeriod = period;
+                    t.partialRent = 0;
+                    if (t.rentStatus !== 'Pending') { t.rentStatus = 'Pending'; flipped.push(t.name); }
+                    if (t.elecStatus !== 'Pending') { t.elecStatus = 'Pending'; }
+                    changed = true;
+                }
+            });
+            if (changed) {
+                await saveFirebaseData();
+                if (flipped.length) {
+                    toast(`New billing cycle: ${flipped.length} tenant${flipped.length === 1 ? '' : 's'} marked Pending.`, 'info');
+                }
+            }
+        }
+
+        // ===== Payment history =====================================
+        // How much rent a tenant has effectively paid, given a status snapshot.
+        function paidRentAmount(s) {
+            if (!s) return 0;
+            if (s.rentStatus === 'Paid') return s.rent || 0;
+            if (s.rentStatus === 'Partial') return s.partialRent || 0;
+            return 0;
+        }
+        // Compare a before/after snapshot and append any new payments to `after.payments`.
+        function logPaymentChanges(before, after) {
+            const now = new Date().toISOString();
+            const period = currentBillingPeriod(after);
+            after.payments = Array.isArray(before && before.payments) ? [...before.payments] : [];
+
+            const deltaRent = paidRentAmount(after) - paidRentAmount(before);
+            if (deltaRent > 0) {
+                after.payments.push({
+                    ts: now, period, kind: 'rent', amount: deltaRent,
+                    status: after.rentStatus, note: after.rentStatus === 'Partial' ? 'Partial payment' : 'Rent cleared'
+                });
+            }
+            if (after.elecStatus === 'Paid' && (!before || before.elecStatus !== 'Paid')) {
+                after.payments.push({
+                    ts: now, period, kind: 'electricity', units: Math.max(0, (after.curr || 0) - (after.prev || 0)),
+                    status: 'Paid', note: 'Electricity cleared'
+                });
+            }
+        }
+
+        // Quick action — mark rent as fully paid without opening the editor.
+        window.markRentPaid = async (id) => {
+            const t = tenants.find(x => x.id === id);
+            if (!t || t.rentStatus === 'Paid') return;
+            const before = { ...t };
+            t.rentStatus = 'Paid';
+            t.partialRent = 0;
+            logPaymentChanges(before, t);
+            await saveFirebaseData();
+            renderTable();
+            toast(`${t.name}'s rent marked Paid.`, 'success');
+        };
+
+        // ===== Payment history modal ==============================
+        const historyModal = document.getElementById('historyModal');
+        window.openHistoryModal = (id) => {
+            const t = tenants.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('historyTitle').textContent = `${t.name} — Payment History`;
+            const pays = Array.isArray(t.payments) ? [...t.payments].sort((a, b) => (b.ts || '').localeCompare(a.ts || '')) : [];
+            const totalRent = pays.filter(p => p.kind === 'rent').reduce((s, p) => s + (p.amount || 0), 0);
+            document.getElementById('historySummary').innerHTML =
+                `<span>${pays.length} payment${pays.length === 1 ? '' : 's'} recorded</span> &nbsp;•&nbsp; <span>Rent collected: <strong class="theme-text-primary font-mono">₹${totalRent.toLocaleString('en-IN')}</strong></span>`;
+            const listEl = document.getElementById('historyList');
+            if (pays.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-10 text-xs theme-text-subtle">No payments recorded yet. Payments are logged automatically when you mark rent or electricity as Paid.</div>`;
+            } else {
+                listEl.innerHTML = pays.map(p => {
+                    const d = p.ts ? new Date(p.ts) : null;
+                    const when = d ? d.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                    const isRent = p.kind === 'rent';
+                    const amount = isRent ? `₹${(p.amount || 0).toLocaleString('en-IN')}` : `${p.units || 0} kWh`;
+                    return `
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-lg border theme-table-row theme-table-head">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="${isRent ? 'indian-rupee' : 'zap'}" class="w-3.5 h-3.5 ${isRent ? 'text-emerald-500' : 'text-amber-500'}"></i>
+                                <span class="font-medium theme-text-primary capitalize">${p.kind}</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded theme-action-btn border theme-text-muted">${p.period || ''}</span>
+                            </div>
+                            <div class="text-[11px] theme-text-subtle mt-0.5">${p.note || ''} · ${when}</div>
+                        </div>
+                        <span class="font-mono font-semibold ${isRent ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'} shrink-0">${amount}</span>
+                    </div>`;
+                }).join('');
+            }
+            historyModal.classList.add('active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+        window.closeHistoryModal = () => historyModal.classList.remove('active');
+
         async function saveFirebaseData() {
             if (!currentUser) return;
             try {
-                await setDoc(doc(db, "users", currentUser.uid), { tenants: tenants });
+                await setDoc(doc(db, "users", currentUser.uid), { tenants: tenants, emailSettings: emailSettings }, { merge: true });
             } catch (e) {
                 console.error("Error saving data:", e);
             }
+        }
+
+        // ===== Rent reminder email (EmailJS) =========================
+        function getRentDue(t) {
+            if (t.rentStatus === 'Paid') return 0;
+            if (t.rentStatus === 'Partial') return Math.max(0, (t.rent || 0) - (t.partialRent || 0));
+            return t.rent || 0; // Pending
+        }
+
+        function emailjsReady() {
+            const c = window.EMAILJS_CONFIG || {};
+            return !!(window.emailjs && c.publicKey && !String(c.publicKey).startsWith('YOUR_') && c.serviceId && c.templateId);
+        }
+
+        function defaultMonthLabel() {
+            return new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+        }
+        function defaultDueDateISO() {
+            const d = new Date();
+            return new Date(d.getFullYear(), d.getMonth(), 5).toISOString().split('T')[0];
+        }
+
+        async function sendReminderEmail(t) {
+            if (!emailjsReady()) throw new Error('EmailJS is not configured. Add your Public Key in the code.');
+            if (!t.email || !/.+@.+\..+/.test(t.email)) throw new Error('This tenant has no valid email address.');
+            const due = getRentDue(t);
+            const params = {
+                name: t.name,
+                email: t.email,
+                to_email: t.email,
+                amount: due.toLocaleString('en-IN'),
+                unit: t.unit || '',
+                month: emailSettings.month || defaultMonthLabel(),
+                due_date: emailSettings.dueDate
+                    ? formatDateReadable(emailSettings.dueDate)
+                    : formatDateReadable(defaultDueDateISO())
+            };
+            return emailjs.send(window.EMAILJS_CONFIG.serviceId, window.EMAILJS_CONFIG.templateId, params);
         }
 
         // Theme Switcher Logic
@@ -720,6 +1125,7 @@
                             <span class="text-xs font-mono mt-0.5 flex items-center gap-1 theme-text-muted">
                                 <i data-lucide="phone" class="w-3 h-3 theme-text-subtle"></i> ${t.contact}
                             </span>
+                            ${t.email ? `<span class="text-[10px] mt-0.5 flex items-center gap-1 theme-text-subtle"><i data-lucide="mail" class="w-3 h-3"></i> ${t.email}</span>` : ''}
                             <span class="text-[10px] theme-text-subtle mt-0.5">Joined: ${formattedDate}</span>
                         </div>
                     </td>
@@ -743,6 +1149,15 @@
                     <td class="px-4 py-3.5 text-center">${getStatusBadgeHtml(t.elecStatus)}</td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex items-center justify-end gap-1.5">
+                            ${t.rentStatus !== 'Paid' ? `<button onclick="markRentPaid('${t.id}')" class="p-1.5 theme-action-btn hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg border transition-colors" title="Mark rent Paid">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                            </button>` : ''}
+                            <button onclick="openHistoryModal('${t.id}')" class="p-1.5 theme-action-btn hover:bg-indigo-500/20 theme-text-muted rounded-lg border transition-colors" title="Payment history">
+                                <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="sendSingleReminder('${t.id}')" ${(t.email && getRentDue(t) > 0) ? '' : 'disabled'} class="p-1.5 theme-action-btn hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg border transition-colors disabled:opacity-40 disabled:cursor-not-allowed" title="${!t.email ? 'No email on file' : getRentDue(t) > 0 ? 'Send rent reminder' : 'No rent due'}">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            </button>
                             <button onclick="editTenant('${t.id}')" class="p-1.5 theme-action-btn hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-lg border transition-colors" title="Edit">
                                 <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                             </button>
@@ -771,8 +1186,18 @@
                             <p class="text-xs font-mono mt-0.5 flex items-center gap-1 theme-text-muted">
                                 <i data-lucide="phone" class="w-3 h-3 theme-text-subtle"></i> ${t.contact}
                             </p>
+                            ${t.email ? `<p class="text-[10px] mt-0.5 flex items-center gap-1 theme-text-subtle"><i data-lucide="mail" class="w-3 h-3"></i> ${t.email}</p>` : ''}
                         </div>
                         <div class="flex items-center gap-1 shrink-0">
+                            ${t.rentStatus !== 'Paid' ? `<button onclick="markRentPaid('${t.id}')" class="p-2 theme-action-btn hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg border" title="Mark rent Paid">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                            </button>` : ''}
+                            <button onclick="openHistoryModal('${t.id}')" class="p-2 theme-action-btn hover:bg-indigo-500/20 theme-text-muted rounded-lg border" title="Payment history">
+                                <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="sendSingleReminder('${t.id}')" ${(t.email && getRentDue(t) > 0) ? '' : 'disabled'} class="p-2 theme-action-btn hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg border disabled:opacity-40 disabled:cursor-not-allowed" title="Send rent reminder">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            </button>
                             <button onclick="editTenant('${t.id}')" class="p-2 theme-action-btn hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-lg border">
                                 <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                             </button>
@@ -860,6 +1285,7 @@
                 document.getElementById('formId').value = tenant.id || '';
                 document.getElementById('formName').value = tenant.name || '';
                 document.getElementById('formContact').value = tenant.contact || '';
+                document.getElementById('formEmail').value = tenant.email || '';
                 document.getElementById('formDate').value = tenant.date || '';
                 document.getElementById('formUnit').value = tenant.unit || '';
                 document.getElementById('formRent').value = tenant.rent ?? '';
@@ -902,6 +1328,7 @@
             const payload = {
                 name: document.getElementById('formName').value.trim(),
                 contact: document.getElementById('formContact').value.trim(),
+                email: document.getElementById('formEmail').value.trim(),
                 date: document.getElementById('formDate').value,
                 unit: document.getElementById('formUnit').value.trim(),
                 rent: parseFloat(document.getElementById('formRent').value) || 0,
@@ -917,9 +1344,19 @@
             
             if (fId) {
                 const idx = tenants.findIndex(t => t.id === fId);
-                if(idx > -1) tenants[idx] = { ...tenants[idx], ...payload };
+                if (idx > -1) {
+                    const before = { ...tenants[idx] };
+                    const merged = { ...tenants[idx], ...payload };
+                    logPaymentChanges(before, merged);
+                    tenants[idx] = merged;
+                }
             } else {
-                tenants.push({ id: generateId(), ...payload });
+                // New tenant: mark the current cycle as already billed so the
+                // auto-cycle logic doesn't immediately re-flip them on next load.
+                const fresh = { id: generateId(), ...payload };
+                fresh.lastBilledPeriod = currentBillingPeriod(fresh);
+                logPaymentChanges(null, fresh);
+                tenants.push(fresh);
             }
 
             await saveFirebaseData();
@@ -941,14 +1378,149 @@
         document.getElementById('filterRent').addEventListener('change', renderTable);
         document.getElementById('filterElec').addEventListener('change', renderTable);
 
+        // ===== Toast notifications ==================================
+        function toast(message, type = 'info') {
+            const wrap = document.getElementById('toastContainer');
+            if (!wrap) return alert(message);
+            const colors = {
+                success: 'bg-emerald-600 border-emerald-500',
+                error: 'bg-rose-600 border-rose-500',
+                info: 'bg-slate-800 border-slate-600'
+            };
+            const el = document.createElement('div');
+            el.className = `pointer-events-auto text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-lg border shadow-lg max-w-xs ${colors[type] || colors.info}`;
+            el.style.cssText = 'opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease';
+            el.textContent = message;
+            wrap.appendChild(el);
+            requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+            setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 4200);
+        }
+
+        // ===== Single-row reminder =================================
+        window.sendSingleReminder = async (id) => {
+            const t = tenants.find(x => x.id === id);
+            if (!t) return;
+            if (!emailjsReady()) return toast('EmailJS not configured yet — add your Public Key in the code.', 'error');
+            if (!t.email) return toast(`${t.name} has no email address on file.`, 'error');
+            const due = getRentDue(t);
+            if (due <= 0) return toast(`${t.name} has no outstanding rent.`, 'info');
+            if (!confirm(`Send a rent reminder to ${t.name} (${t.email}) for ₹${due.toLocaleString('en-IN')}?`)) return;
+            try {
+                await sendReminderEmail(t);
+                toast(`Reminder sent to ${t.name}.`, 'success');
+            } catch (err) {
+                console.error(err);
+                toast(`Failed to send to ${t.name}: ${err?.text || err?.message || 'unknown error'}`, 'error');
+            }
+        };
+
+        // ===== Bulk reminder modal ================================
+        const reminderModal = document.getElementById('reminderModal');
+        const reminderListEl = document.getElementById('reminderList');
+        const reminderSelectAll = document.getElementById('reminderSelectAll');
+        const reminderSendBtn = document.getElementById('reminderSendBtn');
+        const reminderMonthEl = document.getElementById('reminderMonth');
+        const reminderDueEl = document.getElementById('reminderDueDate');
+        const reminderStatusEl = document.getElementById('reminderStatus');
+
+        function eligibleForReminder() {
+            return tenants.filter(t => t.email && /.+@.+\..+/.test(t.email) && getRentDue(t) > 0);
+        }
+
+        function renderReminderList() {
+            const list = eligibleForReminder();
+            if (list.length === 0) {
+                reminderListEl.innerHTML = `<div class="px-4 py-6 text-center text-xs theme-text-subtle">No tenants with an email address and outstanding rent.</div>`;
+                reminderSendBtn.disabled = true;
+                return;
+            }
+            reminderSendBtn.disabled = false;
+            reminderListEl.innerHTML = list.map(t => `
+                <label class="flex items-center justify-between gap-3 px-4 py-2.5 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5">
+                    <span class="flex items-center gap-2.5 min-w-0">
+                        <input type="checkbox" class="reminder-cb accent-indigo-600 shrink-0" value="${t.id}" checked>
+                        <span class="min-w-0">
+                            <span class="block font-medium theme-text-primary truncate">${t.name}</span>
+                            <span class="block text-[11px] theme-text-subtle truncate">${t.email}</span>
+                        </span>
+                    </span>
+                    <span class="font-mono text-xs font-semibold text-rose-600 dark:text-rose-400 shrink-0">₹${getRentDue(t).toLocaleString('en-IN')}</span>
+                </label>
+            `).join('');
+            reminderListEl.querySelectorAll('.reminder-cb').forEach(cb => cb.addEventListener('change', syncSelectAll));
+            syncSelectAll();
+        }
+
+        function syncSelectAll() {
+            const cbs = [...reminderListEl.querySelectorAll('.reminder-cb')];
+            reminderSelectAll.checked = cbs.length > 0 && cbs.every(c => c.checked);
+            const n = cbs.filter(c => c.checked).length;
+            document.getElementById('reminderSendLabel').textContent = n ? `Send to ${n}` : 'Send Selected';
+        }
+
+        reminderSelectAll.addEventListener('change', () => {
+            reminderListEl.querySelectorAll('.reminder-cb').forEach(cb => { cb.checked = reminderSelectAll.checked; });
+            syncSelectAll();
+        });
+
+        window.openReminderModal = () => {
+            if (!emailjsReady()) {
+                toast('EmailJS not configured yet — add your Public Key in the code.', 'error');
+                return;
+            }
+            reminderMonthEl.value = emailSettings.month || defaultMonthLabel();
+            reminderDueEl.value = emailSettings.dueDate || defaultDueDateISO();
+            reminderStatusEl.textContent = '';
+            renderReminderList();
+            reminderModal.classList.add('active');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+        window.closeReminderModal = () => reminderModal.classList.remove('active');
+
+        reminderSendBtn.addEventListener('click', async () => {
+            const ids = [...reminderListEl.querySelectorAll('.reminder-cb:checked')].map(c => c.value);
+            if (ids.length === 0) return toast('Select at least one tenant.', 'info');
+
+            // Persist the month / due-date choices for next time.
+            emailSettings = { month: reminderMonthEl.value.trim(), dueDate: reminderDueEl.value };
+            saveFirebaseData();
+
+            reminderSendBtn.disabled = true;
+            let ok = 0, fail = 0;
+            for (let i = 0; i < ids.length; i++) {
+                const t = tenants.find(x => x.id === ids[i]);
+                if (!t) { fail++; continue; }
+                reminderStatusEl.textContent = `Sending ${i + 1} of ${ids.length}…`;
+                try {
+                    await sendReminderEmail(t);
+                    ok++;
+                } catch (err) {
+                    console.error('Reminder failed for', t.name, err);
+                    fail++;
+                }
+                await new Promise(r => setTimeout(r, 600)); // gentle throttle
+            }
+            reminderSendBtn.disabled = false;
+            reminderStatusEl.textContent = `Done — ${ok} sent${fail ? `, ${fail} failed` : ''}.`;
+            toast(`${ok} reminder${ok === 1 ? '' : 's'} sent${fail ? `, ${fail} failed` : ''}.`, fail ? 'error' : 'success');
+        });
+
+        document.getElementById('bulkReminderBtn').addEventListener('click', () => window.openReminderModal());
+
         // Auth listener is registered only after all DOM references are initialized.
         // This prevents the "Cannot access 'emptyState' before initialization" error.
         onAuthStateChanged(auth, async (user) => {
             try {
-                if (user) {
+                if (user && user.emailVerified) {
                     currentUser = user;
                     authOverlay.classList.add('hidden');
                     await loadFirebaseData();
+                } else if (user && !user.emailVerified) {
+                    // Signed in but email not verified — keep the dashboard locked.
+                    currentUser = null;
+                    authOverlay.classList.remove('hidden');
+                    tenants = [];
+                    renderTable();
                 } else {
                     currentUser = null;
                     authOverlay.classList.remove('hidden');
@@ -963,16 +1535,18 @@
         window.exportCSV = () => {
             if (tenants.length === 0) return alert('No data to export.');
             
-            const headers = ['Date Joined', 'Tenant Name', 'Contact Number', 'Unit Type', 'Base Rent (INR)', 'Rent Status', 'Partial Rent Paid (INR)', 'Initial Reading', 'Prev Reading', 'Curr Reading', 'Consumed Units', 'Elec Payment Status'];
-            
+            const headers = ['Date Joined', 'Tenant Name', 'Contact Number', 'Email', 'Unit Type', 'Base Rent (INR)', 'Rent Status', 'Partial Rent Paid (INR)', 'Rent Due (INR)', 'Initial Reading', 'Prev Reading', 'Curr Reading', 'Consumed Units', 'Elec Payment Status'];
+
             const rows = tenants.map(t => [
                 `"${formatDateReadable(t.date)}"`,
                 `"${t.name.replace(/"/g, '""')}"`,
                 `"${t.contact}"`,
+                `"${(t.email || '').replace(/"/g, '""')}"`,
                 `"${t.unit.replace(/"/g, '""')}"`,
                 t.rent,
                 `"${t.rentStatus}"`,
                 t.rentStatus === 'Partial' ? (t.partialRent || 0) : 0,
+                getRentDue(t),
                 t.initial,
                 t.prev,
                 t.curr,
